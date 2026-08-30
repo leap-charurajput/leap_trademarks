@@ -23,8 +23,8 @@
 		var fs = window.require ? window.require("fs") : null;
 
 		// Injected by build-scripts/inject-plugin-origin.js from plugin-origin.config.json.
-		var REGISTRY_CONFIG_URL = "https://versioncheck.slsplugins.com/panels/trademarks/app-config.json";
-		var FALLBACK_URL = "https://versioncheck.slsplugins.com/panels/trademarks";
+		var REGISTRY_CONFIG_URL = "http://localhost:5002/app-config.json";
+		var FALLBACK_URL = "http://localhost:5002";
 		var BAKED_ENVIRONMENTS = {"production":"https://versioncheck.slsplugins.com/panels/trademarks","development":"https://versioncheck.slsplugins.com/panels/trademarks-dev","beta":"https://versioncheck.slsplugins.com/panels/trademarks-beta","localhost":"http://localhost:5002"};
 
 		var dPath = csInterface.getSystemPath(SystemPath.MY_DOCUMENTS);

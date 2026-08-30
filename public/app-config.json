@@ -1,5 +1,5 @@
 {
-  "defaultOrigin": "https://versioncheck.slsplugins.com/panels/trademarks",
+  "defaultOrigin": "http://localhost:5002",
   "environments": {
     "production": "https://versioncheck.slsplugins.com/panels/trademarks",
     "development": "https://versioncheck.slsplugins.com/panels/trademarks-dev",
