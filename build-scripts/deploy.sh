@@ -42,13 +42,19 @@ fi
 
 [ -f dist/index.html ] || { echo "!! dist/index.html missing — run npm run build first"; exit 1; }
 
-# Guard against shipping a build that still points at a dev origin: the app-config.json inside
-# dist/ is what installed panels read to find their origin, so a stale localhost value here would
-# send every client to a machine that isn't listening.
-if grep -q "localhost\|127.0.0.1" dist/app-config.json; then
-	echo "!! dist/app-config.json still points at a local origin:"
-	cat dist/app-config.json
-	echo "!! Set defaultOrigin in plugin-origin.config.json and rebuild."
+# Guard against publishing a build whose origin does not match this branch. dist/app-config.json is
+# what installed panels read to find their origin, so a wrong value here misroutes every client.
+# Comparing the BUILT defaultOrigin against the one derived above catches both a stale local origin
+# and any drift between plugin-origin.config.json and what actually landed in dist/.
+#
+# Do NOT grep the whole file for "localhost": app-config.json legitimately carries a localhost entry
+# in its `environments` map, which made the old grep-based guard reject correct production builds.
+DIST_ORIGIN="$(node -p "JSON.parse(require('fs').readFileSync('dist/app-config.json','utf8')).defaultOrigin")"
+if [ "$DIST_ORIGIN" != "$ORIGIN" ]; then
+	echo "!! dist/app-config.json defaultOrigin does not match this branch:"
+	echo "!!   built:    $DIST_ORIGIN"
+	echo "!!   expected: $ORIGIN"
+	echo "!! Rebuild, or fix defaultOrigin in plugin-origin.config.json."
 	exit 1
 fi
 
