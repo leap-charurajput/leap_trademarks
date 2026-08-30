@@ -249,7 +249,8 @@ class Controller {
 		/* Browser dev always reads the bundled representative dataset under public/logobase. */
 		if (!this.hasSession()) return 'logobase'
 		/* In Illustrator, use the folder the user chose. Order of precedence:
-		   1) server_path.json (the canonical "active" path),
+		   1) logobaseDataPathSettings.json — the canonical "active" path, SHARED with the legacy
+		      panel (with a one-time fallback migration from the early new-panel server_path.json),
 		   2) the active/first enabled server in server_path_list.json — covers the case where the list
 		      exists but no active path was ever written; we adopt one and persist it as canonical,
 		   3) the saved basePath.
@@ -276,32 +277,57 @@ class Controller {
 		return `${docs}/LEAP Settings/server_path_list.json`
 	}
 
-	/* Canonical store for the chosen LEAP server path: ~/Documents/LEAP Settings/server_path.json. */
+	/* Canonical store for the chosen LEAP server path. Deliberately the LEGACY panel's file —
+	   ~/Documents/LEAP Settings/logobaseDataPathSettings.json, shape { basePath } — so the old and
+	   new Trademarks panels stay in sync while both are in use: switching the server in either
+	   panel is picked up by the other. (The legacy panel reads/writes this exact file/shape in
+	   Illustrator.jsx getLogobasePath / updateLogobaseDataSettingsLocation.) */
 	private serverPathFile(): string | null {
+		const docs = getDocumentsPath()
+		if (!docs) return null
+		return `${docs}/LEAP Settings/logobaseDataPathSettings.json`
+	}
+
+	/* Early new-panel builds wrote server_path.json ({ serverPath }) instead; kept as a read-only
+	   migration source so an existing choice survives the switch to the shared legacy file. */
+	private legacyNewPanelServerPathFile(): string | null {
 		const docs = getDocumentsPath()
 		if (!docs) return null
 		return `${docs}/LEAP Settings/server_path.json`
 	}
 
-	/* Read the saved server path from server_path.json, or null if unset / unreadable. */
+	/* Read the saved server path, or null if unset / unreadable. Accepts the legacy { basePath }
+	   shape (canonical) and { serverPath }; when the shared file is missing, falls back to the old
+	   new-panel server_path.json ONCE and seeds the shared file from it. */
 	private readServerPath(): string | null {
+		const parse = (text: string | null): string | null => {
+			if (!text) return null
+			try {
+				const parsed = JSON.parse(text) as { basePath?: string; serverPath?: string }
+				const value = parsed.basePath || parsed.serverPath
+				return value ? fileUrlToDisk(value) : null
+			} catch {
+				return null
+			}
+		}
 		try {
 			const file = this.serverPathFile()
-			const text = file ? readTextFile(file) : null
-			if (!text) return null
-			const parsed = JSON.parse(text) as { serverPath?: string }
-			return parsed.serverPath ? fileUrlToDisk(parsed.serverPath) : null
+			const shared = parse(file ? readTextFile(file) : null)
+			if (shared) return shared
+			const migrated = parse((() => { const f = this.legacyNewPanelServerPathFile(); return f ? readTextFile(f) : null })())
+			if (migrated) this.writeServerPath(migrated)
+			return migrated
 		} catch {
 			return null
 		}
 	}
 
-	/* Persist the chosen server path to ~/Documents/LEAP Settings/server_path.json. */
+	/* Persist the chosen server path in the shared legacy shape ({ basePath }) the old panel reads. */
 	private writeServerPath(path: string): void {
 		const file = this.serverPathFile()
 		if (!file) return
 		ensureDir(file.replace(/\/[^/]*$/, ''))
-		writeTextFile(file, JSON.stringify({ serverPath: path }, null, 2))
+		writeTextFile(file, JSON.stringify({ basePath: path }, null, 2))
 	}
 
 	/* The default settings when nothing has been saved yet. */
@@ -317,7 +343,7 @@ class Controller {
 		}
 	}
 
-	/* Build a single-server settings object from the active server_path.json (the default when no
+	/* Build a single-server settings object from the active shared path file (the default when no
 	   server_path_list.json exists yet). Returns empty settings when no server path is saved either. */
 	private settingsFromServerPath(): DataSettings {
 		const picked = this.readServerPath()
@@ -327,7 +353,7 @@ class Controller {
 	}
 
 	/* Read the data settings (CEP: server_path_list.json; browser: localStorage). Never throws.
-	   When no list file exists yet, the active server_path.json is used as the sole default server. */
+	   When no list file exists yet, the active shared path file is used as the sole default server. */
 	getDataSettings(): DataSettings {
 		try {
 			if (isCEP()) {
