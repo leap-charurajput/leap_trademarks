@@ -343,6 +343,28 @@ class Controller {
 		}
 	}
 
+	/* The shared logobaseDataPathSettings.json is the source of truth for WHICH server is active —
+	   the legacy panel rewrites it without touching our server_path_list.json, so the list's `active`
+	   flags can go stale (the ServerBar would then name the wrong server while the catalog loads the
+	   shared path). Re-flag the list to match the shared path — appending an entry when the shared
+	   path isn't listed yet — and persist so the files converge. No-op when already consistent. */
+	private reconcileActiveServer(settings: DataSettings): DataSettings {
+		const shared = this.readServerPath()
+		if (!shared) return settings
+		const strip = (p: string) => p.replace(/\/+$/, '')
+		const target = strip(shared)
+		const flagged = settings.servers.find((s) => s.active)
+		if (flagged && strip(flagged.path) === target) return settings
+		const servers = settings.servers.map((s) => ({ ...s, active: strip(s.path) === target }))
+		if (!servers.some((s) => s.active)) {
+			const name = target.split('/').filter(Boolean).pop() || shared
+			servers.push({ name, path: shared, enable: true, active: true })
+		}
+		const reconciled = { basePath: shared, servers }
+		this.saveDataSettings(reconciled)
+		return reconciled
+	}
+
 	/* Build a single-server settings object from the active shared path file (the default when no
 	   server_path_list.json exists yet). Returns empty settings when no server path is saved either. */
 	private settingsFromServerPath(): DataSettings {
@@ -361,7 +383,7 @@ class Controller {
 				const text = path ? readTextFile(path) : null
 				if (text) {
 					const parsed = this.normalizeSettings({ ...this.defaultDataSettings(), ...(JSON.parse(text) as Partial<DataSettings>) })
-					if (parsed.servers.length) return parsed
+					if (parsed.servers.length) return this.reconcileActiveServer(parsed)
 				}
 				return this.settingsFromServerPath()
 			} else {
