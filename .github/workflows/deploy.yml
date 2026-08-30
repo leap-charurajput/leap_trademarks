@@ -1,0 +1,45 @@
+# Auto-deploy: pushing to a channel branch deploys that channel's panel.
+#
+#   main → panels/trademarks · development → panels/trademarks-dev · beta → panels/trademarks-beta
+#
+# The target path is NOT configured here — build-scripts/deploy.sh derives it from the branch's
+# plugin-origin.config.json, same as a manual `npm run deploy`. The localhost branch is excluded
+# on purpose: its origin is the developer's own machine, there is nothing to deploy.
+#
+# One-time setup (repo admin): add the secret VERSIONCHECK_DEPLOY_KEY — the PRIVATE half of an
+# SSH key that is authorized for user `ubuntu` on the versioncheck box. Use a dedicated keypair
+# created for CI, not a personal key.
+name: Deploy
+on:
+  push:
+    branches: [main, development, beta]
+
+# One deploy per branch at a time; a second push waits for the running deploy to finish rather
+# than racing it on the box.
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set up SSH key for the versioncheck box
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.VERSIONCHECK_DEPLOY_KEY }}" > ~/.ssh/versioncheck_box
+          chmod 600 ~/.ssh/versioncheck_box
+          ssh-keyscan -H 50.18.2.155 >> ~/.ssh/known_hosts
+
+      - name: Build and deploy
+        run: npm run deploy
