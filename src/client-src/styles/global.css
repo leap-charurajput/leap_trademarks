@@ -1,0 +1,114 @@
+/*
+ * Global base styles. Component-specific styling lives in each component's style.css.
+ */
+@import './tokens.css';
+@import './themes.css';
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+	height: 100%;
+	margin: 0;
+	/* Lock the document: only designated inner areas scroll (no page-level rubber-band/shift). */
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
+body {
+	font-family: var(--font-family);
+	font-size: var(--font-12);
+	line-height: var(--line-normal);
+	color: var(--color-text);
+	background: var(--color-bg);
+	-webkit-font-smoothing: antialiased;
+	user-select: none;
+}
+
+a {
+	color: var(--color-accent);
+	text-decoration: none;
+}
+
+/* Thin, theme-aware scrollbars (replaces the legacy mCustomScrollbar plugin). */
+.leap-scroll {
+	overflow: auto;
+}
+
+.leap-scroll::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+.leap-scroll::-webkit-scrollbar-thumb {
+	background: var(--scroll-thumb);
+	border-radius: var(--radius-lg);
+}
+
+.leap-scroll::-webkit-scrollbar-track {
+	background: var(--scroll-track);
+}
+
+.leap-visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* Shared text-like input + textarea theme — mirrors the designer's `_input.scss` so every native
+   field is styled from one place (Illustrator look). Covers bare <input> (no type attr) too. */
+input:not([type]),
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"],
+textarea {
+	background: var(--control-bg);
+	border: 1px solid var(--button-border);
+	border-radius: 4px;
+	outline: 0;
+	padding: 1px 4px;
+	min-height: var(--control-height-sm);
+	font-family: inherit;
+	font-size: var(--font-11);
+	color: var(--color-text);
+}
+
+/* On focus the field turns into the Illustrator white editable field (dark text for contrast).
+   No outline ring; border colour is left to each component (e.g. the combo field goes blue). */
+input:not([type]):focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus,
+input[type="month"]:focus,
+input[type="week"]:focus,
+textarea:focus {
+	outline: none;
+	background: var(--control-focus-bg);
+	color: var(--field-active-text);
+	border-radius: 0px;
+}

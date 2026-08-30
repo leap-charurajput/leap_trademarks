@@ -1,0 +1,383 @@
+/* Logosheet builder — compact upload + pool + sets×columns grid in the ≤250px column. */
+.tm-build {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+	min-height: 0;
+}
+
+/* Drop / upload zone. */
+.tm-build__drop {
+	border: 1px dashed var(--color-border-strong);
+	border-radius: var(--radius-md);
+	padding: var(--space-3);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--space-2);
+	text-align: center;
+}
+
+.tm-build__drop.is-over {
+	border-color: var(--color-accent);
+	background: var(--color-bg-selected);
+}
+
+.tm-build__drophint {
+	margin: 0;
+	font-size: var(--font-10);
+	color: var(--color-text-muted);
+}
+
+.tm-build__uploadbtns {
+	display: flex;
+	gap: var(--space-2);
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.tm-build__poolhead {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: var(--font-10);
+	color: var(--color-text-muted);
+}
+
+/* Uploaded logo pool — 4 per row, filling the width (no empty gaps). Height is drag-resizable. */
+.tm-build__pool {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: var(--space-2);
+	min-height: 64px;
+	overflow-y: auto;
+	padding: var(--space-2);
+	border: 1px solid var(--color-divider);
+	border-radius: var(--radius-sm);
+	align-content: start;
+}
+
+.tm-build__chip {
+	position: relative;
+	height: 50px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background: var(--color-bg-raised);
+	cursor: grab;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.tm-build__chip img {
+	max-width: 90%;
+	max-height: 44px;
+	object-fit: contain;
+}
+
+/* Resize handle between the pool and the grid. */
+.tm-build__resizer {
+	height: 8px;
+	cursor: ns-resize;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.tm-build__resizer::before {
+	content: '';
+	width: 36px;
+	height: 3px;
+	border-radius: 2px;
+	background: var(--color-border-strong);
+	opacity: 0.6;
+}
+
+.tm-build__resizer:hover::before {
+	opacity: 1;
+}
+
+.tm-build__chipx,
+.tm-build__rowx,
+.tm-build__colx {
+	position: absolute;
+	top: -6px;
+	right: -6px;
+	width: 14px;
+	height: 14px;
+	line-height: 12px;
+	text-align: center;
+	border: none;
+	border-radius: 50%;
+	background: var(--color-bg);
+	color: var(--color-text-muted);
+	cursor: pointer;
+	font-size: 11px;
+	padding: 0;
+}
+
+/* Logo-type blocks (each → its own LOGOS:<type> artboard). */
+.tm-build__types {
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+}
+
+.tm-build__type {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+	border: 1px solid var(--color-divider);
+	border-radius: var(--radius-sm);
+	padding: var(--space-2);
+}
+
+.tm-build__typehead {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+.tm-build__typename {
+	flex: 1;
+	font-size: var(--font-11);
+	font-weight: 600;
+	background: var(--color-bg-raised);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	color: var(--color-text);
+	padding: var(--space-1) var(--space-2);
+}
+
+.tm-build__typex {
+	position: static;
+	width: 16px;
+	height: 16px;
+	line-height: 14px;
+	font-size: 12px;
+}
+
+.tm-build__addtype {
+	align-self: flex-start;
+}
+
+/* Sets × columns grid. */
+.tm-build__grid {
+	overflow-x: auto;
+	border: 1px solid var(--color-divider);
+	border-radius: var(--radius-sm);
+}
+
+.tm-build__grid table {
+	border-collapse: collapse;
+	width: max-content;
+}
+
+.tm-build__grid th,
+.tm-build__grid td {
+	border: 1px solid var(--color-divider);
+	padding: 0;
+}
+
+.tm-build__colhead {
+	position: relative;
+	min-width: 50px;
+	font-size: var(--font-10);
+	color: var(--color-text-muted);
+	padding: var(--space-2) !important;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.tm-build__corner {
+	min-width: 76px;
+}
+
+.tm-build__rowhead {
+	position: relative;
+	min-width: 76px;
+	padding: var(--space-1) !important;
+}
+
+.tm-build__rowhead input {
+	width: 70px;
+	font-size: var(--font-10);
+	background: transparent;
+	border: none;
+	color: var(--color-text);
+	padding: var(--space-1);
+}
+
+.tm-build__cell {
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+	text-align: center;
+	vertical-align: middle;
+	background: var(--color-bg);
+}
+
+.tm-build__cell.is-filled {
+	background: var(--color-bg-raised);
+}
+
+.tm-build__cell img {
+	max-width: 44px;
+	max-height: 44px;
+	object-fit: contain;
+}
+
+.tm-build__cellempty {
+	color: var(--color-text-muted);
+	font-size: 16px;
+	opacity: 0.5;
+}
+
+.tm-build__rowactions {
+	display: flex;
+	gap: var(--space-4);
+}
+
+.tm-build__create {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+	border-top: 1px solid var(--color-divider);
+	padding-top: var(--space-3);
+}
+
+/* ---- Colour library (Export LEAP Assets) ---- */
+.tm-build__colorsec {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+}
+
+.tm-build__colorhead {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: var(--font-10);
+	color: var(--color-text-muted);
+}
+
+/* TC column stepper: [−] N [+] for adding/removing team-colour columns (TC1…TCN). */
+.tm-build__tcstep {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+.tm-build__tcstep button {
+	width: 18px;
+	height: 18px;
+	line-height: 1;
+	padding: 0;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	background: var(--color-bg-raised);
+	color: var(--color-text);
+	cursor: pointer;
+}
+
+.tm-build__tcstep button:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.tm-build__tcstep b {
+	min-width: 12px;
+	text-align: center;
+}
+
+.tm-build__viewtoggle {
+	display: flex;
+	gap: var(--space-2);
+}
+
+.tm-build__viewtoggle .tm-link.is-active {
+	color: var(--color-accent);
+	font-weight: 600;
+}
+
+.tm-build__swatch {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	border-radius: var(--radius-sm);
+	border: 1px solid var(--color-border);
+	flex: 0 0 auto;
+}
+
+/* ---- Extracted colours (mark TC / Custom) ---- */
+.tm-build__extracted {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+	max-height: 160px;
+	overflow-y: auto;
+	border: 1px solid var(--color-divider);
+	border-radius: var(--radius-sm);
+	padding: var(--space-2);
+}
+
+.tm-build__extchip {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	min-width: 0;
+}
+
+.tm-build__extname {
+	flex: 1;
+	font-size: var(--font-10);
+	color: var(--color-text);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	min-width: 0;
+}
+
+.tm-build__extbadge {
+	font-size: var(--font-10);
+	font-weight: 600;
+	color: var(--color-accent);
+	flex: 0 0 auto;
+}
+
+.tm-build__extrole {
+	font-size: var(--font-10);
+	background: var(--color-bg-raised);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	color: var(--color-text);
+	padding: 0 var(--space-1);
+	flex: 0 0 auto;
+	max-width: 72px;
+}
+
+/* ---- League / Team target selectors ---- */
+.tm-build__target {
+	display: flex;
+	gap: var(--space-2);
+}
+
+.tm-build__targetfield {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+	font-size: var(--font-10);
+	color: var(--color-text-muted);
+	min-width: 0;
+}
+
+.tm-build__targetfield select {
+	font-size: var(--font-10);
+	background: var(--color-bg-raised);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+	color: var(--color-text);
+	padding: var(--space-1) var(--space-2);
+}

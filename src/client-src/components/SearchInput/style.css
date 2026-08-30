@@ -1,0 +1,39 @@
+/* SearchInput — native search field with a clear button; hide the native clear decoration. */
+.leap-search__control {
+	position: relative;
+	display: flex;
+	width: 100%;
+}
+
+.leap-search__input {
+	width: 100%;
+	padding-right: 20px;
+}
+
+.leap-search__input::-webkit-search-decoration,
+.leap-search__input::-webkit-search-cancel-button {
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.leap-search__clear {
+	position: absolute;
+	top: 50%;
+	right: 4px;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 14px;
+	height: 14px;
+	border: none;
+	background: transparent;
+	font-size: var(--font-13);
+	line-height: 1;
+	color: var(--color-text-muted);
+	cursor: pointer;
+}
+
+.leap-search__clear:hover {
+	color: var(--color-text);
+}

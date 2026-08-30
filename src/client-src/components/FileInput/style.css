@@ -1,0 +1,21 @@
+/* FileInput — hide the native input; show a button + the chosen file name. */
+.leap-fileinput__control {
+	display: flex;
+	align-items: center;
+	gap: var(--space-4);
+	width: 100%;
+}
+
+.leap-fileinput__native {
+	display: none;
+}
+
+.leap-fileinput__name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: var(--font-11);
+	color: var(--color-text-muted);
+}

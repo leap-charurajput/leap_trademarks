@@ -1,0 +1,39 @@
+/* ColorInput — square native colour swatch + hex text field. */
+.leap-colorinput__control {
+	display: flex;
+	align-items: center;
+	gap: var(--space-4);
+	width: 100%;
+}
+
+.leap-colorinput__swatch {
+	flex-shrink: 0;
+	width: var(--control-height-sm);
+	height: var(--control-height-sm);
+	padding: 0;
+	border: 1px solid var(--button-border);
+	border-radius: var(--radius-sm);
+	background: none;
+	cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.leap-colorinput__swatch::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+.leap-colorinput__swatch::-webkit-color-swatch {
+	border: none;
+	border-radius: 1px;
+}
+
+.leap-colorinput__swatch::-moz-color-swatch {
+	border: none;
+	border-radius: 1px;
+}
+
+.leap-colorinput__hex {
+	flex: 1;
+	min-width: 0;
+}

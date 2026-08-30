@@ -1,0 +1,52 @@
+.leap-icon-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	background: transparent;
+	color: var(--color-text-muted);
+	border: 1px solid transparent;
+	border-radius: var(--radius-md);
+	cursor: pointer;
+	transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.leap-icon-btn:hover:not(:disabled) {
+	background: var(--color-bg-hover);
+	color: var(--color-text);
+}
+
+.leap-icon-btn:focus-visible {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 1px;
+}
+
+.leap-icon-btn:disabled {
+	opacity: 0.35;
+	cursor: not-allowed;
+}
+
+.leap-icon-btn--active {
+	background: var(--color-bg-selected);
+	color: var(--color-text);
+}
+
+.leap-icon-btn--small {
+	width: var(--control-height-sm);
+	height: var(--control-height-sm);
+}
+
+.leap-icon-btn--medium {
+	width: var(--control-height-md);
+	height: var(--control-height-md);
+}
+
+.leap-icon-btn--large {
+	width: var(--control-height-lg);
+	height: var(--control-height-lg);
+}
+
+.leap-icon-btn > svg {
+	width: 60%;
+	height: 60%;
+}

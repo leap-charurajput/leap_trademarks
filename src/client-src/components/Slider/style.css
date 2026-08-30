@@ -1,0 +1,70 @@
+/*
+ * Slider — themed range input. Track uses the sunken control colour; thumb uses the accent. Styled
+ * for WebKit (CEP/CEF) and Firefox.
+ */
+.leap-slider {
+	width: 100%;
+	height: 18px;
+	background: transparent;
+	cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.leap-slider:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+/* Track — a single uniform grey line (matches the Illustrator reference: track = --button-border,
+   no left/right fill split). Only the thumb is blue (accent). */
+.leap-slider::-webkit-slider-runnable-track {
+	height: 4px;
+	border-radius: 2px;
+	background: var(--button-border);
+}
+
+.leap-slider::-moz-range-track {
+	height: 4px;
+	border-radius: 2px;
+	background: var(--button-border);
+}
+
+/* Thumb. */
+.leap-slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 12px;
+	height: 12px;
+	margin-top: -4px;
+	border-radius: 50%;
+	background: var(--color-accent);
+	border: 1px solid var(--color-accent);
+}
+
+.leap-slider::-moz-range-thumb {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: var(--color-accent);
+	border: 1px solid var(--color-accent);
+}
+
+.leap-slider:focus {
+	outline: none;
+}
+
+/* Keep the thumb a constant size on focus / click / drag — no ring or scale that changes its size. */
+.leap-slider:focus::-webkit-slider-thumb,
+.leap-slider:active::-webkit-slider-thumb {
+	box-shadow: none;
+	width: 12px;
+	height: 12px;
+}
+
+.leap-slider:focus::-moz-range-thumb,
+.leap-slider:active::-moz-range-thumb {
+	box-shadow: none;
+	width: 12px;
+	height: 12px;
+}

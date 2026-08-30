@@ -1,0 +1,98 @@
+/*
+ * ComboBox — composite field: an editable text input + a divider line + a caret cell, all inside one
+ * bordered control. On focus the whole field shows the Illustrator blue border with a white input
+ * background. The open list butts directly against the field (continuity). Shared list/option look is
+ * in select-shared.css.
+ */
+.leap-combobox__field {
+	display: flex;
+	align-items: stretch;
+	width: 100%;
+	background: var(--control-bg);
+	border: 1px solid var(--button-border);
+	border-radius: var(--radius-md);
+	overflow: hidden;
+}
+
+/* Field heights mirror the shared select sizes. */
+.leap-select--small .leap-combobox__field {
+	min-height: var(--control-height-sm);
+}
+.leap-select--medium .leap-combobox__field {
+	min-height: var(--control-height-md);
+}
+.leap-select--large .leap-combobox__field {
+	min-height: var(--control-height-lg);
+}
+
+/* Focused (typing) — Illustrator blue border. The caret cell (not the text input) gets the white
+   background; see the caret rule below. */
+.leap-combobox__field:focus-within {
+	border-color: var(--color-focus);
+}
+
+/* When the list is open, flatten the bottom corners so field + list read as one control. */
+.leap-combobox__field.is-open {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+/* Descendant selector raises specificity above the global `input[type="text"]` rule so the borderless
+   transparent input wins; on focus the global input:focus rule turns it white with dark text. */
+.leap-combobox__field .leap-combobox__input {
+	flex: 1;
+	min-width: 0;
+	font-family: inherit;
+	font-size: var(--font-11);
+	color: var(--color-text);
+	background: transparent;
+	border: none;
+	outline: none;
+	padding: 0 var(--space-5);
+	min-height: 0;
+	cursor: text;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.leap-combobox__field .leap-combobox__input::placeholder {
+	color: var(--color-text-muted);
+}
+
+/* Vertical divider line to the left of the caret (Illustrator select). */
+.leap-combobox__divider {
+	width: 1px;
+	align-self: stretch;
+	background: var(--button-border);
+	flex-shrink: 0;
+}
+
+.leap-combobox__field:focus-within .leap-combobox__divider {
+	background: var(--color-focus);
+}
+
+/* Caret cell — its own square button on the right. */
+.leap-combobox__caret {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 22px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+}
+
+.leap-combobox__caret:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+/* The caret cell background does NOT change on focus — only the text input goes white (handled by
+   the global input:focus rule). The caret keeps the field background. */
+
+/* The open list aligns flush with the field. */
+.leap-combobox__list {
+	border-color: var(--button-border);
+}

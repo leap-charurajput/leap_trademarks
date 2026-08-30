@@ -1,0 +1,62 @@
+/*
+ * Panel icons — ONE monochrome SVG per icon (URLs from assets/registry.ts via --panel-icon-* vars).
+ * Each SVG is used as a CSS mask and painted with --panel-icon-color (set per theme in themes.css),
+ * so a single file recolours for every theme. No dark/light duplicates. `caution` is multi-colour,
+ * so it stays a background-image (see bottom).
+ */
+
+.exp-icon {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	background-color: var(--panel-icon-color);
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	flex-shrink: 0;
+}
+
+.exp-icon--sm {
+	width: 14px;
+	height: 14px;
+}
+
+.exp-icon--add { -webkit-mask-image: var(--panel-icon-add); mask-image: var(--panel-icon-add); }
+.exp-icon--cad { -webkit-mask-image: var(--panel-icon-cad); mask-image: var(--panel-icon-cad); }
+.exp-icon--color { -webkit-mask-image: var(--panel-icon-color); mask-image: var(--panel-icon-color); }
+.exp-icon--delete { -webkit-mask-image: var(--panel-icon-delete); mask-image: var(--panel-icon-delete); }
+.exp-icon--document { -webkit-mask-image: var(--panel-icon-document); mask-image: var(--panel-icon-document); }
+.exp-icon--duplicate { -webkit-mask-image: var(--panel-icon-duplicate); mask-image: var(--panel-icon-duplicate); }
+.exp-icon--edit { -webkit-mask-image: var(--panel-icon-edit); mask-image: var(--panel-icon-edit); }
+.exp-icon--eye { -webkit-mask-image: var(--panel-icon-eye); mask-image: var(--panel-icon-eye); }
+.exp-icon--eye-off { -webkit-mask-image: var(--panel-icon-eye-off); mask-image: var(--panel-icon-eye-off); }
+.exp-icon--export { -webkit-mask-image: var(--panel-icon-export); mask-image: var(--panel-icon-export); }
+.exp-icon--folder { -webkit-mask-image: var(--panel-icon-folder); mask-image: var(--panel-icon-folder); }
+.exp-icon--image { -webkit-mask-image: var(--panel-icon-image); mask-image: var(--panel-icon-image); }
+.exp-icon--popup-arrow { -webkit-mask-image: var(--panel-icon-popup-arrow); mask-image: var(--panel-icon-popup-arrow); }
+.exp-icon--product { -webkit-mask-image: var(--panel-icon-product); mask-image: var(--panel-icon-product); }
+.exp-icon--refresh { -webkit-mask-image: var(--panel-icon-refresh); mask-image: var(--panel-icon-refresh); }
+.exp-icon--settings { -webkit-mask-image: var(--panel-icon-settings); mask-image: var(--panel-icon-settings); }
+.exp-icon--sliders { -webkit-mask-image: var(--panel-icon-sliders); mask-image: var(--panel-icon-sliders); }
+.exp-icon--target { -webkit-mask-image: var(--panel-icon-target); mask-image: var(--panel-icon-target); }
+.exp-icon--team { -webkit-mask-image: var(--panel-icon-team); mask-image: var(--panel-icon-team); }
+.exp-icon--star { -webkit-mask-image: var(--panel-icon-star); mask-image: var(--panel-icon-star); }
+.exp-icon--star-filled { -webkit-mask-image: var(--panel-icon-star-filled); mask-image: var(--panel-icon-star-filled); }
+.exp-icon--grid { -webkit-mask-image: var(--panel-icon-grid); mask-image: var(--panel-icon-grid); }
+.exp-icon--list { -webkit-mask-image: var(--panel-icon-list); mask-image: var(--panel-icon-list); }
+.exp-icon--download { -webkit-mask-image: var(--panel-icon-download); mask-image: var(--panel-icon-download); }
+.exp-icon--add-document { -webkit-mask-image: var(--panel-icon-add-document); mask-image: var(--panel-icon-add-document); }
+
+/* Caution is multi-colour — keep it as a real image (no mask, no paint). */
+.exp-icon--caution {
+	background-color: transparent;
+	-webkit-mask-image: none;
+	mask-image: none;
+	background-image: var(--panel-icon-caution);
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+}

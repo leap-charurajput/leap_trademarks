@@ -1,0 +1,302 @@
+/*
+ * Shared select look — used by Dropdown, MultiSelect and ComboBox so the trigger, popup list and
+ * options are styled in ONE place (no duplication; AGENTS.md §2.3). Borders use the same
+ * --button-border as buttons; option hover uses the same --button-bg-hover as buttons, per theme.
+ */
+.leap-select {
+	display: inline-flex;
+	flex-direction: column;
+	gap: var(--space-2);
+}
+
+.leap-select--full {
+	display: flex;
+	width: 100%;
+}
+
+.leap-select__label {
+	font-size: var(--font-10);
+	color: var(--color-text-muted);
+}
+
+.leap-select__control {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	width: 100%;
+}
+
+/* Trigger — looks like an Illustrator field; same border colour as buttons. The value fills the left,
+   and a caret cell sits on the right separated by a full-height divider line (standard across every
+   select type). Padding lives on the value so the divider + caret reach the field edge. */
+.leap-select__trigger {
+	display: inline-flex;
+	align-items: center;
+	width: 100%;
+	font-family: inherit;
+	font-size: var(--font-11);
+	color: var(--color-text);
+	background: var(--control-bg);
+	border: 1px solid var(--button-border);
+	border-radius: var(--radius-md);
+	padding: 0;
+	cursor: pointer;
+	transition: border-color var(--transition-fast);
+}
+
+.leap-select__trigger:hover:not(:disabled),
+.leap-select__trigger:focus {
+	outline: none;
+	border-color: var(--button-border);
+}
+
+.leap-select__trigger:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.leap-select__value {
+	flex: 1;
+	min-width: 0;
+	padding: 0 var(--space-5);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	/* line-height 1 so the single line centres crisply via the trigger's align-items: center. */
+	line-height: 1;
+	/* Default alignment is left; developers can override via the `align` prop (modifier classes). */
+	text-align: left;
+}
+
+.leap-select__value--left {
+	text-align: left;
+}
+
+.leap-select__value--center {
+	text-align: center;
+}
+
+.leap-select__value--right {
+	text-align: right;
+}
+
+/* Caret cell — a full-height square with a divider line on its left (Illustrator-style). Shared by
+   every select trigger; ComboBox has its own equivalent on its composite field. */
+.leap-select__caret {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	align-self: stretch;
+	flex-shrink: 0;
+	width: 18px;
+	border-left: 1px solid var(--button-border);
+}
+
+.leap-select__value--placeholder {
+	color: var(--color-text-muted);
+}
+
+/* Value content that includes a leading swatch (SwatchSelect trigger). */
+.leap-select__value--with-swatch {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-4);
+}
+
+/* Alignment for the flex (swatch) value uses justify-content instead of text-align. */
+.leap-select__value--with-swatch.leap-select__value--center {
+	justify-content: center;
+}
+
+.leap-select__value--with-swatch.leap-select__value--right {
+	justify-content: flex-end;
+}
+
+/* Designer POPUP-ARROW glyph as a masked SVG painted with the text colour. */
+.leap-select__chevron {
+	flex-shrink: 0;
+	width: 9px;
+	height: 9px;
+	pointer-events: none;
+	background-color: var(--color-text-muted);
+	-webkit-mask: var(--panel-icon-popup-arrow) center / contain no-repeat;
+	mask: var(--panel-icon-popup-arrow) center / contain no-repeat;
+}
+
+/* Sizes (applied to the root, affecting the trigger height). Kept compact to match the Illustrator
+   Properties-panel dropdowns (shorter than the generic control heights). */
+.leap-select--small .leap-select__trigger {
+	min-height: 19px;
+	height: 19px;
+}
+
+.leap-select--medium .leap-select__trigger {
+	min-height: 23px;
+	height: 23px;
+}
+
+.leap-select--large .leap-select__trigger {
+	min-height: 27px;
+	height: 27px;
+}
+
+/* Popup list. It butts directly against the trigger (no gap) and drops its top border + top radius
+   so the trigger and list read as one continuous control (Illustrator-style). */
+.leap-select__list {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	z-index: var(--z-popover);
+	margin: 0;
+	padding: var(--space-1) 0;
+	list-style: none;
+	max-height: 220px;
+	overflow-y: auto;
+	/* Never show a horizontal scrollbar — long options clip/ellipsize instead. */
+	overflow-x: hidden;
+	overscroll-behavior: contain;
+	background: var(--control-bg);
+	border: 1px solid var(--button-border);
+	border-top: none;
+	border-radius: 0 0 var(--radius-md) var(--radius-md);
+	box-shadow: var(--shadow-popover);
+}
+
+/* Thin themed scrollbar for the option list (shown when options overflow the max-height). */
+.leap-select__list::-webkit-scrollbar {
+	width: 10px;
+}
+
+.leap-select__list::-webkit-scrollbar-track {
+	background: var(--scroll-track);
+}
+
+.leap-select__list::-webkit-scrollbar-thumb {
+	background: var(--scroll-thumb);
+	border: 2px solid var(--control-bg);
+	border-radius: var(--radius-lg);
+}
+
+/* When a trigger's list is open, flatten its bottom corners so it merges with the list. */
+.leap-select__trigger[aria-expanded='true'] {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+/* Inner <ul> used when the list also contains a sticky search field (SearchSelect). */
+.leap-select__options {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.leap-select__option {
+	display: flex;
+	align-items: center;
+	gap: var(--space-4);
+	padding: var(--space-2) var(--space-5);
+	font-size: var(--font-11);
+	color: var(--color-text);
+	cursor: pointer;
+	white-space: nowrap;
+	/* Clip an over-long label instead of widening the list (no horizontal scrollbar). */
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Hover + keyboard-active rows use the SAME Illustrator hover fill as buttons. */
+.leap-select__option:hover,
+.leap-select__option.is-active {
+	background: var(--button-bg-hover);
+}
+
+.leap-select__option.is-selected {
+	background: var(--color-bg-selected);
+}
+
+.leap-select__option.is-disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.leap-select__empty {
+	padding: var(--space-2) var(--space-5);
+	font-size: var(--font-11);
+	color: var(--color-text-muted);
+}
+
+/* Selected tick (opt-in via showSelectedTick) — reserves its width on every row so labels stay
+   aligned; the checkmark itself only shows on the selected row (Illustrator stroke-weight style). */
+.leap-select__tick {
+	position: relative;
+	flex-shrink: 0;
+	width: 12px;
+	height: 12px;
+	visibility: hidden;
+}
+
+.leap-select__tick.is-visible {
+	visibility: visible;
+}
+
+.leap-select__tick::after {
+	content: '';
+	position: absolute;
+	left: 4px;
+	top: 0;
+	width: 3px;
+	height: 7px;
+	border: solid var(--color-text);
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}
+
+/* Colour/image swatch shown at the left of an option (and the trigger) — single colour, a two-colour
+   diagonal split, or an image. The actual fill is an inline style (dynamic data; AGENTS.md §2.2). */
+.leap-select__swatch {
+	flex-shrink: 0;
+	width: 16px;
+	height: 16px;
+	border-radius: var(--radius-sm);
+	border: 1px solid var(--button-border);
+	background-clip: padding-box;
+	background-size: cover;
+	background-position: center;
+}
+
+.leap-select__swatch--sm {
+	width: 13px;
+	height: 13px;
+}
+
+/* In-list search field (SearchSelect) — sits pinned at the top of the popup. */
+.leap-select__search-wrap {
+	position: sticky;
+	top: 0;
+	padding: var(--space-2);
+	background: var(--control-bg);
+	border-bottom: 1px solid var(--button-border);
+}
+
+/* Descendant selector raises specificity above the global `input[type="text"]` rule so the white
+   field + bluish border actually win (Illustrator editable field). */
+.leap-select__search-wrap .leap-select__search {
+	width: 100%;
+	font-family: inherit;
+	font-size: var(--font-11);
+	color: var(--field-active-text);
+	background: var(--control-focus-bg);
+	border: 1px solid var(--color-focus);
+	border-radius: var(--radius-md);
+	padding: var(--space-2) var(--space-4);
+	min-height: var(--control-height-sm);
+	outline: none;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.leap-select__search::placeholder {
+	color: var(--color-text-muted);
+}

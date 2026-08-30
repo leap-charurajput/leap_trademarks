@@ -1,0 +1,78 @@
+/*
+ * MultiSelect-specific styles: chips in the trigger + the option checkbox glyph. Trigger/list/option
+ * base styling is shared (select-shared.css).
+ */
+.leap-multiselect__trigger {
+	/* Chips can wrap, so let the trigger grow vertically while keeping a comfortable min height. */
+	height: auto;
+	min-height: var(--control-height-md);
+}
+
+.leap-multiselect__chips {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	align-items: center;
+	overflow: hidden;
+	/* Padding lives here (the shared trigger has none) so chips clear the field edges. */
+	padding: var(--space-1) var(--space-5);
+}
+
+.leap-multiselect__chip {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	padding: 0 var(--space-2) 0 var(--space-3);
+	font-size: var(--font-10);
+	line-height: 1.6;
+	color: var(--color-text);
+	background: var(--button-bg-hover);
+	border: 1px solid var(--button-border);
+	border-radius: var(--radius-sm);
+}
+
+.leap-multiselect__chip-remove {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 12px;
+	height: 12px;
+	font-size: var(--font-12);
+	line-height: 1;
+	color: var(--color-text-muted);
+	cursor: pointer;
+}
+
+.leap-multiselect__chip-remove:hover {
+	color: var(--color-text);
+}
+
+/* Option checkbox glyph — a small square that fills + shows a tick when checked. */
+.leap-multiselect__check {
+	position: relative;
+	flex-shrink: 0;
+	width: 13px;
+	height: 13px;
+	border: 1px solid var(--button-border);
+	border-radius: var(--radius-sm);
+	background: var(--control-bg);
+}
+
+.leap-multiselect__check.is-checked {
+	background: var(--color-accent);
+	border-color: var(--color-accent);
+}
+
+.leap-multiselect__check.is-checked::after {
+	content: '';
+	position: absolute;
+	left: 4px;
+	top: 1px;
+	width: 3px;
+	height: 7px;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}

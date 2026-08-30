@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>LEAP Trademarks</title>
+	<!--
+		CEP bootstrap: when running inside Illustrator we must load CSInterface.js
+		before the React app mounts. In a browser we start immediately.
+		See AGENTS.md §4 (host bridge) for why this lives outside React.
+	-->
+	<script>
+		(function () {
+			var isCEP = typeof window.__adobe_cep__ !== 'undefined' ||
+				typeof window.CSInterface !== 'undefined' ||
+				(window.location.protocol === 'file:' && window.location.pathname.indexOf('web') !== -1);
+
+			window.__LEAP_BOOTSTRAP__ = function (startApp) {
+				if (!isCEP) { startApp(); return; }
+
+				var startWhenReady = function () {
+					var loadAdapter = function () {
+						if (typeof AIEventAdapter !== 'undefined') { startApp(); return; }
+						var adapterEl = document.createElement('script');
+						adapterEl.type = 'text/javascript';
+						adapterEl.src = './libs/cs_host_adapter-2.0.js';
+						adapterEl.onerror = function () { startApp(); };
+						adapterEl.onload = startApp;
+						document.head.appendChild(adapterEl);
+					};
+					if (typeof CSInterface !== 'undefined') { loadAdapter(); return; }
+					setTimeout(startWhenReady, 50);
+				};
+				if (typeof CSInterface !== 'undefined') { startWhenReady(); return; }
+
+				var paths = ['./libs/CSInterface.js', '/libs/CSInterface.js', '../libs/CSInterface.js'];
+				var el = document.createElement('script');
+				el.type = 'text/javascript';
+				var load = function (i) {
+					if (i >= paths.length) { startApp(); return; }
+					el.src = paths[i];
+					el.onerror = function () { load(i + 1); };
+					el.onload = startWhenReady;
+					document.head.appendChild(el);
+				};
+				load(0);
+			};
+		})();
+	</script>
+</head>
+
+<body>
+	<div id="root"></div>
+	<script type="module">
+		const startApp = () => import('/src/client-src/index.tsx');
+		if (typeof window.__LEAP_BOOTSTRAP__ === 'function') {
+			window.__LEAP_BOOTSTRAP__(startApp);
+		} else {
+			startApp();
+		}
+	</script>
+</body>
+
+</html>

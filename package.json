@@ -1,0 +1,33 @@
+{
+	"name": "leap-trademarks",
+	"version": "1.0.0",
+	"description": "LEAP Trademarks (new) — React/TypeScript Illustrator CEP plugin",
+	"type": "module",
+	"scripts": {
+		"dev": "node ./build-scripts/inject-plugin-origin.js && vite",
+		"dev:cep": "node ./build-scripts/sync-cep-extension.js && node ./build-scripts/inject-plugin-origin.js && vite",
+		"build": "node ./build-scripts/inject-plugin-origin.js && tsc --noEmit && vite build",
+		"typecheck": "tsc --noEmit",
+		"sync:cep": "node ./build-scripts/sync-cep-extension.js",
+		"deploy": "./build-scripts/deploy.sh",
+		"zxp": "node ./build-scripts/inject-plugin-origin.js --redirect-only && node ./build-scripts/create-zxp.js"
+	},
+	"author": "Charu Rajput",
+	"license": "ISC",
+	"dependencies": {
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"xlsx": "^0.18.5"
+	},
+	"devDependencies": {
+		"@types/node": "^22.10.0",
+		"@types/react": "^18.3.12",
+		"@types/react-dom": "^18.3.1",
+		"@vitejs/plugin-react": "^4.3.4",
+		"chalk": "^4.1.2",
+		"typescript": "^5.7.2",
+		"vite": "^6.0.3",
+		"zxp-provider": "^1.0.0",
+		"zxp-sign-cmd": "^1.0.0"
+	}
+}

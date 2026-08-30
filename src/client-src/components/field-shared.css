@@ -1,0 +1,58 @@
+/*
+ * Shared field chrome for the native form components (TextField, NumberInput, Slider, …). One place
+ * for the label / hint / error layout + full-width + control sizing, so every Adobe-themed native
+ * control lines up identically. Visual theme of the inputs themselves lives in styles/global.css
+ * (element-based) + design tokens; this file is layout + the canonical `.leap-input` class.
+ */
+.leap-field {
+	display: inline-flex;
+	flex-direction: column;
+	gap: var(--space-2);
+}
+
+.leap-field--full {
+	display: flex;
+	width: 100%;
+}
+
+.leap-field__label {
+	font-size: var(--font-10);
+	color: var(--color-text-muted);
+}
+
+.leap-field__label--required::after {
+	content: ' *';
+	color: var(--color-danger);
+}
+
+.leap-field__hint {
+	font-size: var(--font-10);
+	color: var(--color-text-muted);
+}
+
+.leap-field__error {
+	font-size: var(--font-10);
+	color: var(--color-danger);
+}
+
+/* Canonical input class — element styling comes from global.css; this adds width + the error ring.
+   `input.leap-input` keeps specificity at parity with the global element rules. */
+input.leap-input,
+textarea.leap-input {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+input.leap-input--invalid,
+textarea.leap-input--invalid {
+	border-color: var(--color-danger);
+}
+
+/* Disabled state shared by every native control wrapper. */
+.leap-field.is-disabled {
+	opacity: 0.5;
+}
+
+.leap-field.is-disabled .leap-field__label {
+	cursor: not-allowed;
+}

@@ -1,0 +1,26 @@
+.leap-tooltip__bubble {
+	position: fixed;
+	z-index: 99999;
+	padding: 3px 6px;
+	min-height: 22px;
+	background: var(--tooltip-bg);
+	color: var(--tooltip-text);
+	border: 1px solid var(--tooltip-border);
+	border-radius: var(--radius-sm);
+	font-size: var(--font-10);
+	font-family: var(--font-family);
+	line-height: var(--line-normal);
+	/* Panel is ~250px wide — cap width and wrap so long labels never overflow (and so never clip). */
+	max-width: 220px;
+	width: max-content;
+	white-space: normal;
+	word-break: break-word;
+	pointer-events: none;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+	opacity: 0;
+	transition: opacity 0.12s ease;
+}
+
+.leap-tooltip__bubble.is-visible {
+	opacity: 1;
+}

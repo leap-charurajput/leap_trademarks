@@ -1,0 +1,62 @@
+/**
+ * Checkbox — matches leap_color_separator styling (SVG icons, theme-aware).
+ */
+
+.checkbox-component {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+	cursor: pointer;
+	user-select: none;
+}
+
+.checkbox-component.disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.checkbox-input {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.checkbox-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 12px;
+	height: 12px;
+	flex-shrink: 0;
+	color: var(--color-text);
+	transition: opacity var(--transition);
+}
+
+.checkbox-icon svg {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
+
+.checkbox-component:hover:not(.disabled) .checkbox-icon {
+	opacity: 0.8;
+}
+
+.checkbox-component:active:not(.disabled) .checkbox-icon {
+	opacity: 0.6;
+}
+
+.checkbox-label-text {
+	font-size: var(--font-11);
+	color: var(--color-text);
+	line-height: var(--line-normal);
+}
+
+.checkbox-input:focus-visible + .checkbox-icon {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 2px;
+	border-radius: var(--radius-sm);
+}

@@ -1,0 +1,52 @@
+.leap-toast-stack {
+	position: fixed;
+	bottom: var(--space-8);
+	left: 50%;
+	translate: -50% 0;
+	z-index: var(--z-toast);
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
+	max-width: 90vw;
+}
+
+.leap-toast {
+	font-family: inherit;
+	text-align: left;
+	padding: var(--space-4) var(--space-8);
+	border-radius: var(--radius-md);
+	border: 1px solid var(--button-border);
+	background: var(--color-bg-sunken);
+	color: var(--color-text);
+	font-size: var(--font-11);
+	cursor: pointer;
+	box-shadow: var(--shadow-popover);
+	animation: leap-toast-in var(--transition) ease;
+}
+
+.leap-toast--success {
+	border-left: 3px solid var(--color-success);
+}
+
+.leap-toast--warning {
+	border-left: 3px solid var(--color-warning);
+}
+
+.leap-toast--error {
+	border-left: 3px solid var(--color-danger);
+}
+
+.leap-toast--info {
+	border-left: 3px solid var(--color-accent);
+}
+
+@keyframes leap-toast-in {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}

@@ -1,0 +1,192 @@
+/*
+ * Theme colours — mirror the designer system 1:1:
+ *   Clone/SlsVariables/assests/scss/_varibales.scss  (.dark | .medium-dark | .medium-light | .light)
+ *
+ * Mapping (designer var → our token):
+ *   --body-bg                  → --color-bg
+ *   --darker-body              → --color-bg-sunken
+ *   --inner-bg                 → --color-bg-raised, --color-bg-hover, --control-border (field border)
+ *   --text-color               → --color-text, --panel-link-color
+ *   --input-border-color       → --color-text-muted (checkbox/radio glyph, dropdown chevron)
+ *   --border-color             → --color-border
+ *   --input-border-hover-color → --color-border-strong (button border + button hover fill)
+ *   --seprator-color           → --color-divider
+ *   --global-hover-bg          → --color-bg-hover
+ *   --selected-color           → --color-bg-selected
+ *   --input-bg                 → --control-bg
+ *   --input-focus-border-color → --color-focus, --color-accent
+ *
+ * Do NOT hand-tune these away from the designer source; update the source mapping instead.
+ */
+
+body.theme-dark {
+	--color-bg: #323232;
+	--color-bg-raised: #3e3e3e;
+	--color-bg-sunken: #222222;
+	--color-bg-hover: #3e3e3e;
+	--color-bg-active: #3e3e3e;
+	--color-bg-selected: #3d4d61;
+
+	--color-border: #525252;
+	--color-border-strong: #cdcdcd;
+	--color-divider: #2c2c2c;
+
+	--color-text: #d6d6d6;
+	--color-text-muted: #999999;
+	--color-text-disabled: #999999;
+	--color-text-inverse: #323232;
+
+	--color-accent: #5e9eee;
+	--color-accent-hover: #5e9eee;
+	--color-focus: #5e9eee;
+
+	--control-bg: #262626;
+	--control-bg-hover: #2e2e2e;
+	--control-bg-active: #262626;
+	--control-border: #3e3e3e;
+	--control-focus-bg: #fcfcfc;
+
+	--button-border: #525252;
+	--button-bg-hover: #3e3e3e;
+	--field-active-text: #262626;
+
+	--panel-link-color: #d6d6d6;
+	--panel-link-color-hover: #cdcdcd;
+	--panel-link-color-active: #cdcdcd;
+
+	--panel-icon-color: #dbdacf;
+
+	--scroll-thumb: #3e3e3e;
+	--scroll-track: #2a2a2a;
+
+	--shadow-popover: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.theme-medium-dark {
+	--color-bg: #535353;
+	--color-bg-raised: #5f5f5f;
+	--color-bg-sunken: #494949;
+	--color-bg-hover: #5f5f5f;
+	--color-bg-active: #5f5f5f;
+	--color-bg-selected: #56667a;
+
+	--color-border: #ffffff;
+	--color-border-strong: #ffffff;
+	--color-divider: #4d4d4d;
+
+	--color-text: #ffffff;
+	--color-text-muted: #c7c7c7;
+	--color-text-disabled: #c7c7c7;
+	--color-text-inverse: #535353;
+
+	--color-accent: #5e9eee;
+	--color-accent-hover: #5e9eee;
+	--color-focus: #5e9eee;
+
+	--control-bg: #454545;
+	--control-bg-hover: #4d4d4d;
+	--control-bg-active: #454545;
+	--control-border: #5f5f5f;
+	--control-focus-bg: #ffffff;
+
+	--button-border: #747474;
+	--button-bg-hover: #5f5f5f;
+	--field-active-text: #262626;
+
+	--panel-link-color: #ffffff;
+	--panel-link-color-hover: #ffffff;
+	--panel-link-color-active: #ffffff;
+
+	--panel-icon-color: #dbdacf;
+
+	--scroll-thumb: #5f5f5f;
+	--scroll-track: #4b4b4b;
+
+	--shadow-popover: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+body.theme-medium-light {
+	--color-bg: #b9b9b9;
+	--color-bg-raised: #a8a8a8;
+	--color-bg-sunken: #9a9797;
+	--color-bg-hover: #a8a8a8;
+	--color-bg-active: #a8a8a8;
+	--color-bg-selected: #56667a;
+
+	--color-border: #4a4a4a;
+	--color-border-strong: #232323;
+	--color-divider: #acacac;
+
+	--color-text: #010101;
+	--color-text-muted: #4a4a4a;
+	--color-text-disabled: #4a4a4a;
+	--color-text-inverse: #e3e3e3;
+
+	--color-accent: #2f65cb;
+	--color-accent-hover: #2f65cb;
+	--color-focus: #2f65cb;
+
+	--control-bg: #e3e3e3;
+	--control-bg-hover: #dadada;
+	--control-bg-active: #e3e3e3;
+	--control-border: #a8a8a8;
+	--control-focus-bg: #e3e3e3;
+
+	--button-border: #8f8f8f;
+	--button-bg-hover: #c4c4c4;
+	--field-active-text: #2e2e2e;
+
+	--panel-link-color: #010101;
+	--panel-link-color-hover: #232323;
+	--panel-link-color-active: #232323;
+
+	--panel-icon-color: #231f20;
+
+	--scroll-thumb: #c4c4c4;
+	--scroll-track: #4b4b4b;
+
+	--shadow-popover: 0 4px 12px rgba(0, 0, 0, 0.7);
+}
+
+body.theme-light {
+	--color-bg: #f0f0f0;
+	--color-bg-raised: #dcdcdc;
+	--color-bg-sunken: #c8c6c6;
+	--color-bg-hover: #dcdcdc;
+	--color-bg-active: #dcdcdc;
+	--color-bg-selected: #c2d1ec;
+
+	--color-border: #6d6d6d;
+	--color-border-strong: #484848;
+	--color-divider: #e1e1e1;
+
+	--color-text: #5a5a5a;
+	--color-text-muted: #6d6d6d;
+	--color-text-disabled: #6d6d6d;
+	--color-text-inverse: #ffffff;
+
+	--color-accent: #3774df;
+	--color-accent-hover: #3774df;
+	--color-focus: #3774df;
+
+	--control-bg: #ffffff;
+	--control-bg-hover: #f6f6f6;
+	--control-bg-active: #ffffff;
+	--control-border: #dcdcdc;
+	--control-focus-bg: #ffffff;
+
+	--button-border: #bdbdbd;
+	--button-bg-hover: #fbfbfb;
+	--field-active-text: #010101;
+
+	--panel-link-color: #5a5a5a;
+	--panel-link-color-hover: #484848;
+	--panel-link-color-active: #484848;
+
+	--panel-icon-color: #231f20;
+
+	--scroll-thumb: #dcdcdc;
+	--scroll-track: #fbfbfb;
+
+	--shadow-popover: 0 4px 12px rgba(0, 0, 0, 0.9);
+}

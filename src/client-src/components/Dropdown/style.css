@@ -1,0 +1,5 @@
+/*
+ * Dropdown has no component-specific styles — its look is the shared select styling in
+ * components/select-shared.css (imported by index.tsx). Kept as a placeholder so the component
+ * folder convention (index.tsx + style.css) holds; add Dropdown-only rules here if ever needed.
+ */

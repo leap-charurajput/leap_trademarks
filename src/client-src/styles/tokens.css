@@ -1,0 +1,117 @@
+/*
+ * Design tokens — the SINGLE source of truth for colour, spacing, radius and type.
+ * Every component references these variables; no component hard-codes a hex value.
+ * Themes only re-assign these variables (see themes.css). AGENTS.md §6.
+ */
+
+:root {
+	/* Spacing scale (4px base) */
+	--space-1: 2px;
+	--space-2: 4px;
+	--space-3: 6px;
+	--space-4: 8px;
+	--space-5: 10px;
+	--space-6: 12px;
+	--space-8: 16px;
+	--space-10: 20px;
+	--space-12: 24px;
+
+	/* Radius */
+	--radius-sm: 2px;
+	--radius-md: 3px;
+	--radius-lg: 5px;
+	/* Buttons — measured from the Illustrator screenshots (~4px rounded rect, not a pill).
+	   Every text button uses this so the app stays consistent. */
+	--radius-button: 2px;
+
+	/* Typography — Illustrator's UI font (Adobe Clean / Spectrum's "adobe-clean"),
+	   with native system fallbacks if Adobe Clean isn't available to the panel webview. */
+	--font-family: "adobe-clean", "Adobe Clean", "Lucida Grande", "Segoe UI", Arial, sans-serif;
+	--font-10: 10px;
+	--font-11: 11px;
+	--font-12: 12px;
+	--font-13: 13px;
+	--font-14: 14px;
+	--line-tight: 1.2;
+	--line-normal: 1.4;
+
+	/* Control sizing */
+	--control-height-sm: 20px;
+	--control-height-md: 24px;
+	--control-height-lg: 30px;
+
+	/* Motion */
+	--transition-fast: 0.12s ease;
+	--transition: 0.2s ease;
+
+	/* Elevation — per-theme shadow in themes.css */
+	--z-popover: 1000;
+	--z-modal: 1100;
+	--z-confirm: 1150;
+	--z-toast: 1200;
+
+	/* First-paint dark — mirrors SlsVariables :root .dark (themes.css) */
+	--color-bg: #323232;
+	--color-bg-raised: #3e3e3e;
+	--color-bg-sunken: #222222;
+	--color-bg-hover: #3e3e3e;
+	--color-bg-active: #3e3e3e;
+	--color-bg-selected: #3d4d61;
+
+	--color-border: #525252;
+	--color-border-strong: #cdcdcd;
+	--color-divider: #2c2c2c;
+
+	--color-text: #d6d6d6;
+	--color-text-muted: #999999;
+	--color-text-disabled: #999999;
+	--color-text-inverse: #262626;
+
+	--color-accent: #5e9eee;
+	--color-accent-hover: #5e9eee;
+	--color-focus: #5e9eee;
+
+	/* Not in SlsVariables panel palette — shared status / tooltip chrome */
+	--color-danger: #d65a5a;
+	--color-warning: #e0a106;
+	--color-success: #4caf50;
+	--tooltip-bg: #fdfdcc;
+	--tooltip-text: #2c2c2c;
+	--tooltip-border: #c8c880;
+
+	/* Input/dropdown fields (designer _input.scss / _dropDown.scss). Field border = inner-bg.
+	   Buttons use --color-border-strong (see Button/style.css). */
+	--control-bg: #262626;
+	--control-bg-hover: #2e2e2e;
+	--control-bg-active: #262626;
+	--control-border: #3e3e3e;
+	--control-focus-bg: #fcfcfc;
+
+	/* Buttons — Illustrator-native (sampled from the Quick Actions "Recolor" button per theme).
+	   Resting = transparent + thin border + normal text; hover = a subtle one-step lighter fill.
+	   Only the border + hover fill vary by theme (see themes.css). */
+	--button-border: #525252;
+	--button-bg-hover: #3e3e3e;
+
+	/* Dark text for white/active editable fields (search box, focused combo). Stays dark in every
+	   theme so it is always readable on the white --control-focus-bg. */
+	--field-active-text: #262626;
+
+	/* Tint applied to masked panel icons (per-theme override in themes.css). */
+	--panel-icon-color: #dbdacf;
+
+	--panel-link-font-size: 11px;
+	--panel-link-font-size-active: 12px;
+	--panel-link-font-weight: 200;
+	--panel-link-font-weight-active: 900;
+	--panel-link-color: #d6d6d6;
+	--panel-link-color-hover: #cdcdcd;
+	--panel-link-color-active: #d6d6d6;
+
+	--scroll-thumb: #3e3e3e;
+	--scroll-track: #2a2a2a;
+
+	--shadow-popover: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Per-theme colours: themes.css (imported from global.css) */

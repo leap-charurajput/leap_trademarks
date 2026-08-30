@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<meta charset="UTF-8" />
+	<script type="text/javascript" src="./CSInterface.js"></script>
+	<script type="text/javascript">
+		// LEAP Trademarks shell — the ONLY thing the ZXP ships. It never contains app code: it decides
+		// which hosted web-app origin to load and redirects there. All url knowledge lives in the
+		// HOSTED registry (app-config.json) and the user's local channel choice, so deployments,
+		// channel-url changes and even a production re-host NEVER require re-shipping the ZXP.
+		//
+		// Resolution order:
+		//   1. Local dev shell (FALLBACK_URL is localhost): always the local vite server.
+		//   2. User picked a channel in LEAP Data Settings (Environment in Trademarks_Config.json):
+		//      resolve that channel's CURRENT url from the hosted registry; fall back to the cached
+		//      Origin offline.
+		//   3. No choice saved: the registry's defaultOrigin (repointable server-side), else FALLBACK_URL.
+		//
+		// The chosen url is PROBED (a real HTTP request) before navigating, so a dead deployment or a
+		// stopped local dev server shows a friendly recovery screen instead of the raw CEF error page.
+		var csInterface = new CSInterface();
+		var fs = window.require ? window.require("fs") : null;
+
+		// Injected by build-scripts/inject-plugin-origin.js from plugin-origin.config.json.
+		var REGISTRY_CONFIG_URL = "https://versioncheck.slsplugins.com/panels/trademarks/app-config.json";
+		var FALLBACK_URL = "https://versioncheck.slsplugins.com/panels/trademarks";
+		var BAKED_ENVIRONMENTS = {"production":"https://versioncheck.slsplugins.com/panels/trademarks","development":"https://versioncheck.slsplugins.com/panels/trademarks-dev","beta":"https://versioncheck.slsplugins.com/panels/trademarks-beta","localhost":"http://localhost:5002"};
+
+		var dPath = csInterface.getSystemPath(SystemPath.MY_DOCUMENTS);
+		var jsonFilePath = dPath + "/LEAP Settings/LEAP_Trademarks/Trademarks_Config.json";
+
+		var PROBE_TIMEOUT_MS = 6000;
+		var CHANNEL_LABELS = { production: "Production", development: "Development", beta: "Beta", localhost: "Localhost" };
+		var CHANNEL_ORDER = ["production", "development", "beta", "localhost"];
+
+		// The channel→url map the recovery screen's version buttons use. Seeded with the urls baked
+		// at ZXP-build time so the buttons exist even when the hosted registry is unreachable or
+		// (an older deployment) has no `environments` yet; a fetched registry map overrides it.
+		var knownEnvironments = BAKED_ENVIRONMENTS;
+
+		function isLocalDevOrigin(url) {
+			return url.indexOf("localhost") !== -1 || url.indexOf("127.0.0.1") !== -1;
+		}
+
+		function ensureDir(dirPath) {
+			if (!fs || !fs.existsSync || fs.existsSync(dirPath)) return;
+			var parts = dirPath.split("/");
+			var current = "";
+			for (var i = 0; i < parts.length; i++) {
+				if (!parts[i]) continue;
+				current = current ? current + "/" + parts[i] : parts[i];
+				if (!fs.existsSync(current)) {
+					try { fs.mkdirSync(current); } catch (e) { console.error("mkdir failed:", current, e); }
+				}
+			}
+		}
+
+		// { environment: "production"|"development"|"beta"|"localhost"|null, origin: url|null }.
+		// `Environment` is the user's channel choice (written by the panel's LEAP Data Settings);
+		// `Origin` is the last url that choice resolved to — the offline fallback.
+		function readLocalConfig() {
+			try {
+				if (!fs || !fs.existsSync || !fs.existsSync(jsonFilePath)) return null;
+				var parsed = JSON.parse(fs.readFileSync(jsonFilePath, "utf8"));
+				if (!parsed) return null;
+				return {
+					environment: parsed.Environment && parsed.Environment !== "" ? parsed.Environment : null,
+					origin: parsed.Origin && parsed.Origin !== "" ? parsed.Origin : null
+				};
+			} catch (error) {
+				console.error("Error reading local config:", error);
+				return null;
+			}
+		}
+
+		function writeLocalConfig(environment, origin) {
+			try {
+				if (!fs || !fs.writeFileSync) return;
+				ensureDir(dPath + "/LEAP Settings");
+				ensureDir(dPath + "/LEAP Settings/LEAP_Trademarks");
+				fs.writeFileSync(jsonFilePath, JSON.stringify({ Environment: environment, Origin: origin }, null, 2), "utf8");
+			} catch (error) {
+				console.error("Error writing local config:", error);
+			}
+		}
+
+		// Local-dev convenience only: a dev-synced shell (localhost FALLBACK) pins the config to the
+		// vite server so changing the port "just works". Hosted shells NEVER auto-create the file —
+		// users without an explicit choice must keep following the hosted registry's defaultOrigin;
+		// auto-pinning the ZXP's baked url here would defeat server-side repointing.
+		function syncLocalDevConfig() {
+			var saved = readLocalConfig();
+			if (!saved) {
+				writeLocalConfig("localhost", FALLBACK_URL);
+				return;
+			}
+			var savedIsLocal = saved.origin && isLocalDevOrigin(saved.origin);
+			if (savedIsLocal && saved.origin !== FALLBACK_URL) {
+				writeLocalConfig(saved.environment || "localhost", FALLBACK_URL);
+			}
+		}
+
+		// Fetch the hosted registry: { defaultOrigin, environments: { production, development, … } }.
+		// Calls back with null when unreachable/invalid — callers then use the cached/baked fallbacks.
+		function fetchRegistry(callback) {
+			try {
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", REGISTRY_CONFIG_URL, true);
+				xhr.timeout = PROBE_TIMEOUT_MS;
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState !== 4) return;
+					if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText) {
+						try {
+							var data = JSON.parse(xhr.responseText);
+							if (data && (data.defaultOrigin || data.environments)) {
+								if (data.environments) knownEnvironments = data.environments;
+								callback(data);
+								return;
+							}
+						} catch (parseError) { console.error("Invalid app-config.json:", parseError); }
+					}
+					callback(null);
+				};
+				xhr.ontimeout = function () { callback(null); };
+				xhr.onerror = function () { callback(null); };
+				xhr.send();
+			} catch (e) {
+				console.error("Failed to fetch registry:", e);
+				callback(null);
+			}
+		}
+
+		// A real HTTP request (with cache-buster + timeout) that proves the origin serves the app.
+		// Localhost fails near-instantly when the dev server is down; hosted urls get a bounded wait.
+		function probeUrl(url, callback) {
+			var done = false;
+			var finish = function (ok) { if (!done) { done = true; callback(ok); } };
+			try {
+				var xhr = new XMLHttpRequest();
+				var probeSrc = url + (url.indexOf("?") === -1 ? "?" : "&") + "shellProbe=" + new Date().getTime();
+				xhr.open("GET", probeSrc, true);
+				xhr.timeout = PROBE_TIMEOUT_MS;
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState !== 4) return;
+					finish(xhr.status >= 200 && xhr.status < 400);
+				};
+				xhr.ontimeout = function () { finish(false); };
+				xhr.onerror = function () { finish(false); };
+				xhr.send();
+			} catch (e) {
+				finish(false);
+			}
+		}
+
+		function channelLabel(channelId) {
+			return (channelId && CHANNEL_LABELS[channelId]) || null;
+		}
+
+		// The friendly recovery screen (instead of the raw CEF connection-error page). Explains WHAT
+		// failed in the user's terms, and offers Try Again plus a one-click switch to EVERY other
+		// known version — a user stuck on a dead channel (e.g. Localhost picked by mistake) cannot
+		// reach the panel's LEAP Data Settings, so the full version picker must live here. Clicking a
+		// version persists it exactly like Data Settings does, then probes and loads it.
+		function showUnreachableMessage(url, channelId) {
+			var label = channelLabel(channelId);
+			var title, body;
+			if (isLocalDevOrigin(url)) {
+				title = "Local dev server is not running";
+				body = "LEAP Trademarks is set to the Localhost version, but nothing is running at <b>" + url + "</b>." +
+					"<br/><br/>Run <b>npm run dev</b> in <b>leap_trademarks</b> and click Try Again — or pick another version below.";
+			} else if (navigator.onLine === false) {
+				title = "No internet connection";
+				body = "LEAP Trademarks loads over the internet. Reconnect, then click Try Again.";
+			} else {
+				title = (label ? "The " + label + " version" : "LEAP Trademarks") + " is not reachable";
+				body = "Could not reach <b>" + url + "</b>." +
+					"<br/><br/>It may be temporarily down. Check your internet connection or try again in a moment.";
+			}
+
+			// Every OTHER channel the registry knows about, in a fixed order. Empty when the registry
+			// was unreachable (fully offline — nothing else would load either) and in local dev shells.
+			var alternatives = [];
+			if (knownEnvironments) {
+				for (var i = 0; i < CHANNEL_ORDER.length; i++) {
+					var altId = CHANNEL_ORDER[i];
+					var altUrl = knownEnvironments[altId];
+					if (altUrl && altId !== channelId && altUrl !== url) alternatives.push({ id: altId, url: altUrl });
+				}
+			}
+
+			var render = function () {
+				if (!document.body) return;
+				document.body.style.margin = "0";
+				document.body.style.background = "#2f2f2f";
+				document.body.style.color = "#f0f0f0";
+				document.body.style.fontFamily = "Arial, sans-serif";
+				var btnStyle = "margin:4px;padding:7px 14px;border:1px solid #5a5a5a;border-radius:4px;" +
+					"background:#3f3f3f;color:#f0f0f0;font-size:12px;cursor:pointer;";
+				var altButtons = "";
+				for (var j = 0; j < alternatives.length; j++) {
+					altButtons += '<button class="shell-alt" data-i="' + j + '" style="' + btnStyle + '">' +
+						(CHANNEL_LABELS[alternatives[j].id] || alternatives[j].id) + "</button>";
+				}
+				document.body.innerHTML =
+					'<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:16px;box-sizing:border-box;text-align:center;">' +
+					'<div style="font-size:14px;font-weight:bold;margin-bottom:10px;">' + title + "</div>" +
+					'<div style="font-size:12px;line-height:1.6;color:#c8c8c8;max-width:230px;word-break:break-word;">' + body + "</div>" +
+					'<div style="margin-top:16px;"><button id="shell-retry" style="' + btnStyle + '">Try Again</button></div>' +
+					(alternatives.length
+						? '<div style="margin-top:14px;font-size:11px;color:#a0a0a0;">Or switch to another version:</div>' +
+						  '<div style="margin-top:4px;max-width:230px;">' + altButtons + "</div>"
+						: "") +
+					"</div>";
+				var retry = document.getElementById("shell-retry");
+				if (retry) retry.onclick = function () { window.location.reload(); };
+				var altEls = document.getElementsByClassName("shell-alt");
+				for (var k = 0; k < altEls.length; k++) {
+					altEls[k].onclick = (function (alt) {
+						return function () {
+							writeLocalConfig(alt.id, alt.url);
+							redirectTo(alt.url, alt.id);
+						};
+					})(alternatives[Number(altEls[k].getAttribute("data-i"))]);
+				}
+			};
+			if (document.readyState === "loading") {
+				document.addEventListener("DOMContentLoaded", render, { once: true });
+				return;
+			}
+			render();
+		}
+
+		// Navigate only after the origin proves it is serving; otherwise show the recovery screen.
+		function redirectTo(url, channelId) {
+			console.log("LEAP Trademarks redirect →", url);
+			if (typeof navigator !== "undefined" && navigator.onLine === false && !isLocalDevOrigin(url)) {
+				showUnreachableMessage(url, channelId);
+				return;
+			}
+			probeUrl(url, function (reachable) {
+				if (reachable) { window.location.href = url; } else { showUnreachableMessage(url, channelId); }
+			});
+		}
+
+		if (isLocalDevOrigin(FALLBACK_URL)) {
+			syncLocalDevConfig();
+			redirectTo(FALLBACK_URL, "localhost");
+		} else {
+			var saved = readLocalConfig();
+			fetchRegistry(function (registry) {
+				var envs = registry && registry.environments;
+				if (saved && saved.environment && envs && envs[saved.environment]) {
+					// The user's channel, at its CURRENT url. Refresh the cached origin so the offline
+					// fallback tracks channel-url moves too.
+					var resolved = envs[saved.environment];
+					if (resolved !== saved.origin) writeLocalConfig(saved.environment, resolved);
+					redirectTo(resolved, saved.environment);
+				} else if (saved && saved.origin) {
+					// Registry unreachable (or unknown channel id): last resolved url.
+					redirectTo(saved.origin, saved.environment);
+				} else if (registry && registry.defaultOrigin) {
+					redirectTo(registry.defaultOrigin, null);
+				} else {
+					redirectTo(FALLBACK_URL, null);
+				}
+			});
+		}
+	</script>
+	<title>LEAP Trademarks</title>
+</head>
+
+<body>
+	Loading LEAP Trademarks…
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+/**
+ * Confirmation dialog — Adobe panel styling via design tokens (themes.css).
+ */
+.confirmation-dialog__overlay {
+	position: fixed;
+	inset: 0;
+	z-index: var(--z-confirm);
+	background: rgba(0, 0, 0, 0.55);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: var(--space-8);
+}
+
+.confirmation-dialog {
+	width: 400px;
+	max-width: calc(100vw - 40px);
+	/* No hard min-width: the panel is a 250px column, and a 300px floor made the dialog overflow it
+	   (AGENTS §2.11). It still renders at 400px wherever there is room. */
+	min-width: 0;
+	background: var(--color-bg);
+	border: none;
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-popover);
+	color: var(--color-text);
+}
+
+.confirmation-dialog__header {
+	padding: var(--space-5) var(--space-6);
+	border-bottom: 1px solid var(--button-border);
+}
+
+.confirmation-dialog__title {
+	margin: 0;
+	font-size: var(--font-12);
+	font-weight: 600;
+	text-align: center;
+	color: var(--color-text);
+}
+
+.confirmation-dialog__body {
+	padding: var(--space-5) var(--space-6);
+}
+
+.confirmation-dialog__message {
+	margin: 0;
+	font-size: var(--font-11);
+	line-height: var(--line-normal);
+	color: var(--color-text-muted);
+	white-space: pre-wrap;
+}
+
+.confirmation-dialog__footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--space-4);
+	padding: var(--space-5) var(--space-6);
+	border-top: 1px solid var(--button-border);
+}
+
+.confirmation-dialog__footer:has(> .leap-btn:only-child) {
+	justify-content: center;
+}
+
+.confirmation-dialog__footer .leap-btn {
+	min-width: 70px;
+}

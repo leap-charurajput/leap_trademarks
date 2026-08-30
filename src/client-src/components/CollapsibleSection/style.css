@@ -1,0 +1,58 @@
+/* CollapsibleSection — themed details/summary disclosure. */
+.leap-collapsible {
+	border-bottom: 1px solid var(--button-border);
+}
+
+.leap-collapsible__summary {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	padding: var(--space-1) 0;
+	cursor: pointer;
+	list-style: none;
+	user-select: none;
+}
+
+/* Hide the native disclosure marker (we draw our own chevron). */
+.leap-collapsible__summary::-webkit-details-marker {
+	display: none;
+}
+.leap-collapsible__summary::marker {
+	content: '';
+}
+
+.leap-collapsible__chevron {
+	width: 9px;
+	height: 9px;
+	flex-shrink: 0;
+	background-color: var(--color-text-muted);
+	-webkit-mask: var(--panel-icon-popup-arrow) center / contain no-repeat;
+	mask: var(--panel-icon-popup-arrow) center / contain no-repeat;
+	transform: rotate(-90deg);
+	transition: transform var(--transition-fast);
+}
+
+.leap-collapsible[open] > .leap-collapsible__summary .leap-collapsible__chevron {
+	transform: rotate(0deg);
+}
+
+.leap-collapsible__title {
+	flex: 1;
+	font-size: var(--font-11);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--color-text-muted);
+}
+
+.leap-collapsible__right {
+	display: inline-flex;
+	align-items: center;
+}
+
+.leap-collapsible__body {
+	padding: 0 0 var(--space-4) var(--space-5);
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+}

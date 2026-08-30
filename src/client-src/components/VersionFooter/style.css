@@ -1,0 +1,20 @@
+/* One-line, always-visible status bar. Tokens only; matches the panel's sunken chrome. */
+.version-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-3);
+	flex-shrink: 0;
+	padding: var(--space-1) var(--space-4);
+	border-top: 1px solid var(--color-divider);
+	background: var(--color-bg-sunken);
+	color: var(--color-text-muted);
+	font-size: var(--font-10);
+	line-height: 1.6;
+	user-select: none;
+}
+
+.version-footer__env,
+.version-footer__ver {
+	white-space: nowrap;
+}

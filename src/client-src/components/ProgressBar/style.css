@@ -1,0 +1,44 @@
+/* ProgressBar — themed track + accent fill; indeterminate variant animates. */
+.leap-progress {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+}
+
+.leap-progress__meta {
+	display: flex;
+	justify-content: space-between;
+	font-size: var(--font-10);
+	color: var(--color-text-muted);
+}
+
+.leap-progress__track {
+	width: 100%;
+	height: 6px;
+	border-radius: 3px;
+	background: var(--control-bg);
+	border: 1px solid var(--button-border);
+	overflow: hidden;
+}
+
+.leap-progress__fill {
+	height: 100%;
+	background: var(--color-accent);
+	transition: width var(--transition);
+}
+
+.leap-progress__fill.is-indeterminate {
+	width: 40%;
+	border-radius: 3px;
+	animation: leap-progress-slide 1.1s ease-in-out infinite;
+}
+
+@keyframes leap-progress-slide {
+	0% {
+		margin-left: -40%;
+	}
+	100% {
+		margin-left: 100%;
+	}
+}

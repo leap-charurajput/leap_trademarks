@@ -1,0 +1,35 @@
+/* PasswordField — input with a small text toggle pinned on the right. */
+.leap-password__control {
+	position: relative;
+	display: flex;
+	width: 100%;
+}
+
+.leap-password__input {
+	width: 100%;
+	padding-right: 24px;
+}
+
+.leap-password__toggle {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	bottom: 1px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	border: none;
+	background: transparent;
+	padding: 0;
+	cursor: pointer;
+}
+
+.leap-password__toggle:hover:not(:disabled) .exp-icon {
+	background-color: var(--color-text);
+}
+
+.leap-password__toggle:disabled {
+	opacity: 0.4;
+	cursor: not-allowed;
+}

@@ -1,0 +1,77 @@
+.radio-group {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
+}
+
+.radio-group--inline {
+	flex-direction: row;
+	gap: var(--space-8);
+}
+
+/* A row holds the radio label plus optional inline trailing content (e.g. a dropdown). */
+.radio-row {
+	display: flex;
+	align-items: center;
+	gap: var(--space-4);
+}
+
+.radio-row__trailing {
+	display: inline-flex;
+	align-items: center;
+	flex: 1;
+	min-width: 0;
+}
+
+.radio-component {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.radio-component.disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.radio-input {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.radio-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	border: 1px solid currentColor;
+	color: var(--color-text);
+	flex-shrink: 0;
+}
+
+.radio-input:checked + .radio-icon::after {
+	content: '';
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+.radio-label-text {
+	font-size: var(--font-11);
+	color: var(--color-text);
+	line-height: 1.35;
+}
+
+.radio-input:focus-visible + .radio-icon {
+	outline: 2px solid var(--color-focus);
+	outline-offset: 2px;
+}

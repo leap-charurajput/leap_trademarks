@@ -1,0 +1,15 @@
+/*
+ * App-level layout. Component-specific styles live in each component's co-located style.css;
+ * this file only sets the panel frame.
+ */
+.app {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	width: 100%;
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-family: var(--font-family);
+	font-size: var(--font-12);
+	overflow: hidden;
+}
