@@ -5,11 +5,57 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>LEAP Trademarks</title>
-	<!--
-		CEP bootstrap: when running inside Illustrator we must load CSInterface.js
-		before the React app mounts. In a browser we start immediately.
-		See AGENTS.md §4 (host bridge) for why this lives outside React.
-	-->
+	<style>
+		:root {
+			--lskel-bg: #323232;
+			--lskel-strip: #222222;
+			--lskel-bone: rgba(255, 255, 255, 0.10);
+			--lskel-sheen: rgba(255, 255, 255, 0.05);
+		}
+		html.lskel-light {
+			--lskel-bg: #f0f0f0;
+			--lskel-strip: #dcdcdc;
+			--lskel-bone: rgba(0, 0, 0, 0.10);
+			--lskel-sheen: rgba(0, 0, 0, 0.05);
+		}
+		body { margin: 0; background: var(--lskel-bg); }
+		.lskel { display: flex; flex-direction: column; height: 100vh; min-width: 250px; }
+		.lskel-league { display: flex; align-items: center; gap: 10px; padding: 10px 12px 4px; }
+		.lskel-league .lskel-bar { margin: 0; }
+		.lskel-tabs {
+			display: flex; justify-content: center; gap: 12px;
+			padding: 8px 0; margin-top: 4px; background: var(--lskel-strip);
+		}
+		.lskel-tabs i { width: 48px; height: 12px; border-radius: 3px; background: var(--lskel-bone); }
+		.lskel-body { flex: 1; padding: 14px 12px; display: flex; flex-direction: column; gap: 12px; }
+		.lskel-bar {
+			height: 11px; border-radius: 4px; background: var(--lskel-bone);
+			position: relative; overflow: hidden;
+		}
+		.lskel-bar::after {
+			content: ""; position: absolute; inset: 0;
+			background: linear-gradient(90deg, transparent, var(--lskel-sheen), transparent);
+			animation: lskel-sheen 1.2s infinite;
+		}
+		.lskel-foot {
+			display: flex; justify-content: space-between; align-items: center;
+			padding: 8px 12px; background: var(--lskel-strip);
+		}
+		.lskel-foot .lskel-bar { width: 96px; height: 10px; }
+		.lskel-foot .lskel-bar + .lskel-bar { width: 48px; }
+		.lskel-foot--ver { padding: 5px 12px; }
+		.lskel-foot--ver .lskel-bar { width: 56px; height: 8px; }
+		.lskel-foot--ver .lskel-bar + .lskel-bar { width: 32px; }
+		.w20 { width: 20%; } .w35 { width: 35%; } .w55 { width: 55%; } .w75 { width: 75%; } .w90 { width: 90%; height: 22px; }
+		@keyframes lskel-sheen { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+		@media (prefers-reduced-motion: reduce) { .lskel-bar::after { animation: none; } }
+	</style>
+	<script>
+		try {
+			var lskelTheme = localStorage.getItem('leap.trademarks.theme') || '';
+			if (lskelTheme.indexOf('light') !== -1) document.documentElement.className += ' lskel-light';
+		} catch (e) {}
+	</script>
 	<script>
 		(function () {
 			var isCEP = typeof window.__adobe_cep__ !== 'undefined' ||
@@ -51,7 +97,22 @@
 </head>
 
 <body>
-	<div id="root"></div>
+	<div id="root">
+		<div class="lskel" aria-hidden="true">
+			<div class="lskel-league"><span class="lskel-bar w20"></span><span class="lskel-bar w55"></span></div>
+			<div class="lskel-tabs"><i></i><i></i><i></i></div>
+			<div class="lskel-body">
+				<span class="lskel-bar w35"></span>
+				<span class="lskel-bar w90"></span>
+				<span class="lskel-bar w75"></span>
+				<span class="lskel-bar w55"></span>
+				<span class="lskel-bar w75"></span>
+				<span class="lskel-bar w55"></span>
+			</div>
+			<div class="lskel-foot"><span class="lskel-bar"></span><span class="lskel-bar"></span></div>
+			<div class="lskel-foot lskel-foot--ver"><span class="lskel-bar"></span><span class="lskel-bar"></span></div>
+		</div>
+	</div>
 	<script type="module">
 		const startApp = () => import('/src/client-src/index.tsx');
 		if (typeof window.__LEAP_BOOTSTRAP__ === 'function') {
