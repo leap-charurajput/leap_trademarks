@@ -47,7 +47,7 @@ export function MainPanel() {
 
 	const leagueOptions: DropdownOption<string>[] = leagues.map((l) => ({ value: l.Code, label: l.Code }))
 
-	/* No Logobase server folder configured yet — prompt the user to locate it (writes server_path.json). */
+	/* No Logobase server folder configured yet — prompt the user to locate it (writes the shared logobaseDataPathSettings.json). */
 	if (serverMissing) {
 		return (
 			<div className="tm-panel">

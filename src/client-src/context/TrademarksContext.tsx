@@ -163,7 +163,7 @@ function displayPath(p: string): string {
 }
 
 /* Read the configured server folders from the controller's data settings. When nothing is configured
-   the list is empty; the active server_path.json provides the sole default via the controller. */
+   the list is empty; the active logobaseDataPathSettings.json provides the sole default via the controller. */
 function settingsToServers(): ServerFolder[] {
 	const configured = controller.getDataSettings().servers
 	return configured.map((x) => ({ name: x.name, path: displayPath(x.path), enable: x.enable, active: x.active, folderExists: true }))
