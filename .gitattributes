@@ -1,0 +1,3 @@
+plugin-origin.config.json merge=keepours
+public/app-config.json merge=keepours
+zxp/plugin/web/public/redirect.html merge=keepours
