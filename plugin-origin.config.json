@@ -1,5 +1,5 @@
 {
-	"defaultOrigin": "https://versioncheck.slsplugins.com/panels/trademarks-beta",
+	"defaultOrigin": "https://versioncheck.slsplugins.com/panels/trademarks",
 	"environments": {
 		"production": "https://versioncheck.slsplugins.com/panels/trademarks",
 		"development": "https://versioncheck.slsplugins.com/panels/trademarks-dev",
