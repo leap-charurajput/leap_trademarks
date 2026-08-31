@@ -13,3 +13,44 @@
 	font-size: var(--font-12);
 	overflow: hidden;
 }
+
+/* Full-panel explainer when the deployed web app is opened in a plain browser (not CEP, not dev). */
+.app-browser-notice {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-4);
+	padding: var(--space-10);
+	text-align: center;
+}
+
+.app-browser-notice .exp-icon {
+	width: 28px;
+	height: 28px;
+	opacity: 0.7;
+}
+
+.app-browser-notice__title {
+	margin: 0;
+	font-size: var(--font-13, 13px);
+	font-weight: 700;
+}
+
+.app-browser-notice__text {
+	margin: 0;
+	max-width: 340px;
+	font-size: var(--font-11);
+	color: var(--color-text-muted);
+	line-height: 1.6;
+}
+
+/* Body region between the top of the panel and the version footer; the Settings panel overlays it. */
+.app__body {
+	position: relative;
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}

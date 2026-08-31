@@ -29,7 +29,6 @@ function buildFlyoutXml(labels: Record<string, string>, showLogout: boolean): st
 		'<MenuItem Id="openLogs" Label="' + labels.openLogs + '" Enabled="true"/>' +
 		'<MenuItem Id="debugConsole" Label="' + labels.debugConsole + '" Enabled="true"/>' +
 		'<MenuItem Label="---" />' +
-		'<MenuItem Id="dataSettings" Label="' + labels.dataSettings + '" Enabled="true"/>' +
 		'<MenuItem Id="about" Label="' + labels.about + '" Enabled="true"/>' +
 		(showLogout ? '<MenuItem Label="---" /><MenuItem Id="logout" Label="' + labels.logout + '" Enabled="true"/>' : '') +
 		'</Menu>'
@@ -39,7 +38,7 @@ function buildFlyoutXml(labels: Record<string, string>, showLogout: boolean): st
 export function PanelFlyoutSetup() {
 	const { t } = useTranslation()
 	const { notify } = useToast()
-	const { reload, startExcelImport, setAboutOpen, setDataSettingsOpen } = useTrademarks()
+	const { reload, startExcelImport, setAboutOpen } = useTrademarks()
 	const { user, logout } = useAuth()
 
 	useEffect(() => {
@@ -52,7 +51,6 @@ export function PanelFlyoutSetup() {
 			importExcel: t('flyout.importExcel'),
 			openLogs: t('flyout.openLogs'),
 			debugConsole: t('flyout.debugConsole'),
-			dataSettings: t('flyout.dataSettings'),
 			about: t('flyout.about'),
 			logout: t('login.logout'),
 		}
@@ -65,9 +63,6 @@ export function PanelFlyoutSetup() {
 				case 'refreshServer':
 					reload()
 					notify('Refreshing server data…', ToastType.Info)
-					break
-				case 'dataSettings':
-					setDataSettingsOpen(true)
 					break
 				case 'importExcel':
 					if (!startExcelImport()) notify(t('excel.cepOnly'), ToastType.Info)
@@ -101,7 +96,7 @@ export function PanelFlyoutSetup() {
 		}
 		cs.addEventListener(EVENT_FLYOUT_MENU_CLICKED, onFlyoutClick)
 		return () => cs.removeEventListener?.(EVENT_FLYOUT_MENU_CLICKED, onFlyoutClick)
-	}, [reload, notify, t, startExcelImport, setAboutOpen, setDataSettingsOpen, user, logout])
+	}, [reload, notify, t, startExcelImport, setAboutOpen, user, logout])
 
 	return null
 }
