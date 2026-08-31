@@ -63,10 +63,10 @@ const overrides: Partial<Record<TranslationKey, string>> = {
 	'build.exportTcGap': '导出前请为每个 TC 列指定颜色。',
 
 	'settings.title': '设置',
-	'settings.dataFolder': 'LEAP 数据服务器',
+	'settings.dataFolder': 'LEAP 数据服务器：',
 	'settings.dataFolderUnset': '未设置',
-	'settings.version': '版本',
-	'settings.panelVersion': '面板构建',
+	'settings.version': '版本：',
+	'settings.panelVersion': '面板版本：',
 	'settings.running': '当前运行：{name}',
 	'settings.help': '选择面板运行的 LEAP Trademarks 版本。切换立即生效 — 无需重启。',
 	'settings.switching': '正在切换到 {name}…',

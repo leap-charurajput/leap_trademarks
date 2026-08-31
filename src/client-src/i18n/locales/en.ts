@@ -197,10 +197,10 @@ export const en = {
 
 	/* Release-channel switcher (LEAP Data Settings) + version footer. */
 	'settings.title': 'Settings',
-	'settings.dataFolder': 'LEAP data server',
+	'settings.dataFolder': 'LEAP data server:',
 	'settings.dataFolderUnset': 'Not set',
-	'settings.version': 'Version',
-	'settings.panelVersion': 'Panel build',
+	'settings.version': 'Version:',
+	'settings.panelVersion': 'Panel version:',
 	'settings.running': 'Currently running: {name}',
 	'settings.help': 'Choose which LEAP Trademarks version the panel runs. Switching applies immediately — no restart needed.',
 	'settings.switching': 'Switching to {name}…',
