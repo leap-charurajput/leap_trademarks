@@ -1,5 +1,8 @@
 /*
- * SettingsTab — the ⚙ tab after Manage. Two panel settings in one place:
+ * SettingsPanel — the full-panel Settings view opened from the ⚙ button in the version footer.
+ * The footer is app-level and always visible, so Settings is reachable in EVERY panel state (no
+ * document open, no server, no data — unlike a tab, which only exists with a team document).
+ * Two panel settings in one place:
  *   1. Logobase data folder — shows the active server path, Locate… picks a new one (CEP folder
  *      picker; persists to the shared logobaseDataPathSettings.json and reloads the catalog).
  *   2. Panel version — the release-channel switcher (Production / Development / Beta / Localhost).
@@ -47,7 +50,7 @@ async function probeOrigin(origin: string): Promise<boolean> {
 	}
 }
 
-export function SettingsTab() {
+export function SettingsPanel({ onClose }: { onClose: () => void }) {
 	const { t } = useTranslation()
 	const { notify } = useToast()
 	const { currentServer, addServerFolder } = useTrademarks()
@@ -101,7 +104,14 @@ export function SettingsTab() {
 	}
 
 	return (
-		<div className="tm-settingstab tm-datasettings">
+		<div className="tm-settings-overlay">
+			<div className="tm-settings-overlay__head">
+				<span className="tm-settings-overlay__title">{t('settings.title')}</span>
+				<button type="button" className="tm-settings-overlay__close" onClick={onClose} aria-label={t('action.close')}>
+					×
+				</button>
+			</div>
+			<div className="tm-settingstab tm-datasettings">
 			<p className="tm-datasettings__label">{t('settings.dataFolder')}</p>
 			<p className="tm-datasettings__path">{currentServer?.path ?? t('settings.dataFolderUnset')}</p>
 			<Button size={Size.Small} onClick={choose}>
@@ -114,7 +124,8 @@ export function SettingsTab() {
 			<p className="tm-datasettings__hint">{t('settings.help')}</p>
 
 			<p className="tm-datasettings__label tm-datasettings__label--divided">{t('settings.panelVersion')}</p>
-			<p className="tm-datasettings__hint">v{APP_VERSION}</p>
+				<p className="tm-datasettings__hint">v{APP_VERSION}</p>
+			</div>
 		</div>
 	)
 }

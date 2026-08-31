@@ -5,6 +5,7 @@
  * as usual. There is no in-panel router: every Trademarks view lives inside MainPanel.
  */
 import { isCEP } from '@lib/helper'
+import { useState } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { TrademarksProvider } from './context/TrademarksContext'
 import { LogosheetBuilderProvider } from './context/LogosheetBuilderContext'
@@ -12,12 +13,15 @@ import { PanelFlyoutSetup } from './components/PanelFlyoutSetup'
 import { VersionFooter } from './components'
 import { MainPanel } from './pages/MainPanel'
 import { AboutModal } from './pages/MainPanel/AboutModal'
+import { SettingsPanel } from './pages/MainPanel/SettingsPanel'
 import { LoginView } from './pages/LoginView'
 import './App.css'
 
 /* Renders a brief auth-check spinner, the login gate, or the full panel. */
 function AuthGate() {
 	const { requireLogin, authenticated, loading } = useAuth()
+	/* The Settings panel overlays the body (footer stays visible); opened from the footer's ⚙. */
+	const [settingsOpen, setSettingsOpen] = useState(false)
 
 	if (requireLogin && loading && !authenticated) {
 		return (
@@ -43,8 +47,11 @@ function AuthGate() {
 			<LogosheetBuilderProvider>
 				<PanelFlyoutSetup />
 				<div className="app">
-					<MainPanel />
-					<VersionFooter />
+					<div className="app__body">
+						<MainPanel />
+						{settingsOpen && <SettingsPanel onClose={() => setSettingsOpen(false)} />}
+					</div>
+					<VersionFooter onSettingsClick={() => setSettingsOpen((open) => !open)} />
 					{/* About lives at app level so the flyout opens it in EVERY panel state (inside
 					    MainPanel's ready-only return it was unreachable from the overlay states). */}
 					<AboutModal />

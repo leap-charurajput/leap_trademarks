@@ -1239,16 +1239,52 @@
 }
 
 /* ---- Settings tab (shared section styles, formerly the LEAP Data Settings modal) ------------ */
+.tm-settings-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 20;
+	display: flex;
+	flex-direction: column;
+	background: var(--color-bg);
+}
+
+.tm-settings-overlay__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--space-2) var(--space-4);
+	border-bottom: 1px solid var(--color-divider);
+	background: var(--color-bg-sunken);
+}
+
+.tm-settings-overlay__title {
+	font-size: var(--font-11);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--color-text);
+}
+
+.tm-settings-overlay__close {
+	border: none;
+	background: transparent;
+	color: var(--color-text-muted);
+	font-size: var(--font-14, 15px);
+	line-height: 1;
+	cursor: pointer;
+	padding: 0 var(--space-1);
+	border-radius: var(--radius-sm);
+}
+
+.tm-settings-overlay__close:hover {
+	background: var(--button-bg-hover);
+	color: var(--color-text);
+}
+
 .tm-settingstab {
 	padding: var(--space-4);
 	overflow-y: auto;
 	min-height: 0;
-}
-
-.tm-tab--icon {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
 }
 
 .tm-datasettings {

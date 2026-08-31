@@ -24,7 +24,6 @@ export const en = {
 	'tab.league': 'League',
 	'tab.leagueLogos': 'League Logos',
 	'tab.manage': 'Manage',
-	'tab.settings': 'Settings',
 
 	/* Top selectors. */
 	'label.league': 'League',
@@ -197,6 +196,7 @@ export const en = {
 	'flyout.about': 'About LEAP Trademarks',
 
 	/* Release-channel switcher (LEAP Data Settings) + version footer. */
+	'settings.title': 'Settings',
 	'settings.dataFolder': 'Logobase data folder',
 	'settings.dataFolderUnset': 'Not set',
 	'settings.version': 'Version',

@@ -62,7 +62,7 @@ const overrides: Partial<Record<TranslationKey, string>> = {
 	'build.removeTc': '移除 TC 列',
 	'build.exportTcGap': '导出前请为每个 TC 列指定颜色。',
 
-	'tab.settings': '设置',
+	'settings.title': '设置',
 	'settings.dataFolder': 'Logobase 数据文件夹',
 	'settings.dataFolderUnset': '未设置',
 	'settings.version': '版本',
