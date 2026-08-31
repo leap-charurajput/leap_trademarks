@@ -4,6 +4,7 @@
  * authenticated, the LoginView gate replaces the panel; otherwise (or in guest mode) the panel renders
  * as usual. There is no in-panel router: every Trademarks view lives inside MainPanel.
  */
+import { isCEP } from '@lib/helper'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { TrademarksProvider } from './context/TrademarksContext'
 import { LogosheetBuilderProvider } from './context/LogosheetBuilderContext'
@@ -53,7 +54,31 @@ function AuthGate() {
 	)
 }
 
+/*
+ * The hosted web app opened in a PLAIN BROWSER (someone visiting the deployed url) can never work —
+ * all data comes from the local filesystem via CEP — so show a friendly explainer instead of the
+ * misleading "No data yet" screen. Only for production builds: the vite dev server (npm run dev)
+ * keeps the full browser-dev experience (DevStateBar, sample data), and inside Illustrator
+ * isCEP() is true regardless of origin.
+ */
+function BrowserNotice() {
+	return (
+		<div className="app">
+			<div className="app-browser-notice">
+				<span className="exp-icon exp-icon--product" aria-hidden />
+				<p className="app-browser-notice__title">LEAP Trademarks is an Adobe Illustrator plugin.</p>
+				<p className="app-browser-notice__text">
+					This page is the panel's web app — it runs inside Illustrator, not in a browser. Install
+					the LEAP Trademarks extension, then open it from Window → Extensions.
+				</p>
+			</div>
+			<VersionFooter />
+		</div>
+	)
+}
+
 export default function App() {
+	if (!isCEP() && !import.meta.env.DEV) return <BrowserNotice />
 	return (
 		<AuthProvider>
 			<AuthGate />
