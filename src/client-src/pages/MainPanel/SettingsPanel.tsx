@@ -4,16 +4,16 @@
  * document open, no server, no data — unlike a tab, which only exists with a team document).
  *
  * Layout and labels MIRROR LEAP Utilities' Settings tab (same field-row / field-hint classes and
- * strings) so the two panels stay visually consistent. Contents:
- *   1. Version — the release-channel switcher (Production / Development / Beta / Localhost). The
+ * strings) so the two panels stay visually consistent. Contents (same order as Utilities):
+ *   1. LEAP Data server — the shared Logobase folder + Choose… (persists to the shared
+ *      logobaseDataPathSettings.json and reloads the catalog).
+ *   2. Version — the release-channel switcher (Production / Development / Beta / Localhost). The
  *      CHANNEL ID is persisted to Documents/LEAP Settings/LEAP_Trademarks/Trademarks_Config.json
  *      (re-resolved by the shell against the hosted registry on every panel start), and the panel
  *      then SWITCHES IN PLACE: the choice is probed and, when reachable, the page navigates to the
  *      new version immediately — no Illustrator restart. An unreachable target stays saved but is
  *      not navigated to; the shell picks it up next open.
- *   2. Panel version — the build number.
- *   3. LEAP data server (Trademarks-only, not in Utilities) — the active Logobase folder +
- *      Locate… (persists to the shared logobaseDataPathSettings.json and reloads the catalog).
+ *   3. Panel version — the build number.
  */
 import { useState } from 'react'
 import { Button, Dropdown } from '../../components'
@@ -114,9 +114,16 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
 					×
 				</button>
 			</div>
-			<div className="tm-settingstab">
-				{/* Rows mirror LEAP Utilities' Settings tab (same field-row / field-hint classes). */}
-				<div className="field-row">
+			<div className="tm-settingstab leap-scroll">
+				{/* Stacked exactly like LEAP Utilities' SettingsOverlay: data server first (label, full
+				    wrapping path, picker button), then the divided Version section. */}
+				<p className="settings-data__label">{t('settings.dataFolder')}</p>
+				<p className="settings-data__path">{currentServer?.path ?? t('settings.dataFolderUnset')}</p>
+				<Button size={Size.Small} onClick={choose}>
+					{t('action.choose')}
+				</Button>
+
+				<div className="field-row settings-data__divided">
 					<span className="field-row__label">{t('settings.version')}</span>
 					<div className="field-row__control">
 						<Dropdown value={selected} options={envOptions} onChange={(id) => void onEnvChange(id)} fullWidth showSelectedTick />
@@ -130,17 +137,6 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
 				</div>
 
 				<p className="field-hint">{t('settings.help')}</p>
-
-				{/* Trademarks-only: the LEAP data server (Logobase folder) — Utilities has no server. */}
-				<div className="field-row field-row--top">
-					<span className="field-row__label">{t('settings.dataFolder')}</span>
-					<div className="field-row__control">
-						<p className="field-hint">{currentServer?.path ?? t('settings.dataFolderUnset')}</p>
-						<Button size={Size.Small} onClick={choose}>
-							{t('welcome.locate')}
-						</Button>
-					</div>
-				</div>
 			</div>
 		</div>
 	)
