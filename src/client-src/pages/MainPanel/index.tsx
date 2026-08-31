@@ -24,8 +24,6 @@ import { LogoSheetView } from './LogoSheetView'
 import { ServerBar } from './ServerBar'
 import { ExcelImportModal } from './ExcelImportModal'
 import { ManageServersModal } from './ManageServersModal'
-import { AboutModal } from './AboutModal'
-import { DataSettingsModal } from './DataSettingsModal'
 import { PanelOverlays } from './PanelOverlays'
 import { DevStateBar } from './DevStateBar'
 import './style.css'
@@ -182,8 +180,6 @@ export function MainPanel() {
 
 			<ExcelImportModal />
 			<ManageServersModal />
-			<AboutModal />
-			<DataSettingsModal />
 		</div>
 	)
 }

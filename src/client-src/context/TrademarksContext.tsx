@@ -133,8 +133,6 @@ interface TrademarksContextValue {
 	setManageServersOpen: (open: boolean) => void
 	aboutOpen: boolean
 	setAboutOpen: (open: boolean) => void
-	dataSettingsOpen: boolean
-	setDataSettingsOpen: (open: boolean) => void
 }
 
 const TrademarksContext = createContext<TrademarksContextValue | null>(null)
@@ -306,7 +304,6 @@ export function TrademarksProvider({ children }: { children: ReactNode }) {
 	}, [])
 	const [manageServersOpen, setManageServersOpen] = useState(false)
 	const [aboutOpen, setAboutOpen] = useState(false)
-	const [dataSettingsOpen, setDataSettingsOpen] = useState(false)
 
 	/* When the league changes, snap the team selection to its first team. */
 	const setLeague = useCallback((code: string) => {
@@ -559,15 +556,13 @@ export function TrademarksProvider({ children }: { children: ReactNode }) {
 			setManageServersOpen,
 			aboutOpen,
 			setAboutOpen,
-			dataSettingsOpen,
-			setDataSettingsOpen,
 		}),
 		[
 			dataLoading, dataError, serverMissing, noData, loadData,
 			leagues, selectedLeague, selectedTeam, setLeague, setTeam, selectFavourite, prevTeam, nextTeam, activeTab, favourites, isFavourite,
 			toggleFavourite, removeFavourite, colorView, selectedBgColor, logoSetNames, selectedLogoSet,
 			logosForSelectedSet, editMode, editedTeam, beginEdit, cancelEdit, saveEdit, setEditedField, servers, currentServer,
-			changeServer, addServerFolder, removeServer, toggleServer, openServerFolder, general, toggleGeneral, panelState, docType, logoSheetInfo, excelOpen, importSession, startExcelImport, manageServersOpen, aboutOpen, dataSettingsOpen,
+			changeServer, addServerFolder, removeServer, toggleServer, openServerFolder, general, toggleGeneral, panelState, docType, logoSheetInfo, excelOpen, importSession, startExcelImport, manageServersOpen, aboutOpen,
 		],
 	)
 
