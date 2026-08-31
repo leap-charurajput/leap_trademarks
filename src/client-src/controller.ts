@@ -1544,6 +1544,20 @@ class Controller {
 		return result.data?.lines ?? []
 	}
 
+	/* ---- External links ---------------------------------------------------------------------------- */
+
+	/*
+	 * Hand a url (http(s):, mailto:, …) to the OS default handler. CEF cannot navigate to a non-web
+	 * scheme: letting an <a href="mailto:…"> resolve normally makes the PANEL ITSELF try to load it and
+	 * fail with ERR_UNKNOWN_URL_SCHEME, blanking the view. Every external link must call this instead of
+	 * relying on default anchor navigation. Returns true when the OS accepted it.
+	 */
+	openExternalUrl(url: string): boolean {
+		const opened = openUrlInDefaultBrowser(url)
+		if (!opened) logger.warn('Link', `Could not open ${url}`)
+		return opened
+	}
+
 	/* ---- Debug console --------------------------------------------------------------------------- */
 
 	/*
