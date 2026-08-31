@@ -14,7 +14,6 @@ import { useTrademarks } from '../../context/TrademarksContext'
 import { useAuth } from '../../context/AuthContext'
 import { useTranslation } from '../../context/LocaleContext'
 import { ToastType } from '../../enums'
-import { DEBUG_CONSOLE_URL } from '../../constants'
 import { getCSInterface, isCEP } from '@lib/helper'
 
 const EVENT_FLYOUT_MENU_CLICKED = 'com.adobe.csxs.events.flyoutMenuClicked'
@@ -71,11 +70,7 @@ export function PanelFlyoutSetup() {
 					void controller.openLogsFolder()
 					break
 				case 'debugConsole':
-					try {
-						window.open(DEBUG_CONSOLE_URL, '_blank')
-					} catch {
-						/* ignore */
-					}
+					if (!controller.openDebugConsole()) notify(t('flyout.debugConsoleFailed'), ToastType.Error)
 					break
 				case 'about':
 					setAboutOpen(true)

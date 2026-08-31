@@ -32,7 +32,7 @@ export function AboutModal() {
 				<p className="tm-about__row">Product Design: Hanaan Rosenthal</p>
 				<p className="tm-about__row">Development: Charu Rajput</p>
 				<p className="tm-about__row">
-					Contact: <a href="mailto:LEAP@octane5.com">LEAP@octane5.com</a>
+					Contact: <a href="mailto:leap@octane5.com">leap@octane5.com</a>
 				</p>
 			</div>
 		</Modal>
