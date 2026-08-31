@@ -1,12 +1,14 @@
 /*
- * AboutModal — port of the legacy "About LEAP Trademarks" subpanel: product name, version, credits
- * and contact. Static content for now.
+ * AboutModal — the "About LEAP Trademarks" dialog: product name, version, credits and contact.
+ * Name/version/release-date/contact all come from constants (version via APP_VERSION →
+ * PANEL.version) so the dialog can never drift from the build it ships in.
  */
 import controller from '../../controller'
 import { Button, Modal } from '../../components'
 import { ButtonVariant, Size } from '../../enums'
 import { useTranslation } from '../../context/LocaleContext'
 import { useTrademarks } from '../../context/TrademarksContext'
+import { APP_NAME, APP_RELEASE_DATE, APP_VERSION, SUPPORT_EMAIL } from '../../constants'
 
 export function AboutModal() {
 	const { t } = useTranslation()
@@ -27,9 +29,9 @@ export function AboutModal() {
 			}
 		>
 			<div className="tm-about">
-				<p className="tm-about__name">LEAP Trademarks</p>
-				<p className="tm-about__row">Version 5.0.1</p>
-				<p className="tm-about__row">Release Date: June 13, 2026</p>
+				<p className="tm-about__name">{APP_NAME}</p>
+				<p className="tm-about__row">Version {APP_VERSION}</p>
+				<p className="tm-about__row">Release Date: {APP_RELEASE_DATE}</p>
 				<p className="tm-about__row">Product Design: Hanaan Rosenthal</p>
 				<p className="tm-about__row">Development: Charu Rajput</p>
 				<p className="tm-about__row">
@@ -37,13 +39,13 @@ export function AboutModal() {
 					{/* The href stays for hover/right-click, but the click is handled: CEF cannot navigate to
 					    mailto: and would fail with ERR_UNKNOWN_URL_SCHEME. */}
 					<a
-						href="mailto:leap@octane5.com"
+						href={`mailto:${SUPPORT_EMAIL}`}
 						onClick={(e) => {
 							e.preventDefault()
-							controller.openExternalUrl('mailto:leap@octane5.com')
+							controller.openExternalUrl(`mailto:${SUPPORT_EMAIL}`)
 						}}
 					>
-						leap@octane5.com
+						{SUPPORT_EMAIL}
 					</a>
 				</p>
 			</div>

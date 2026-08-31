@@ -8,8 +8,14 @@ import originConfig from '../../plugin-origin.config.json'
 
 export const APP_NAME = 'LEAP Trademarks'
 
-/* Panel build version, shown in the footer. Single source: telemetry identity. */
+/* Panel build version, shown in the footer and the About modal. Single source: telemetry identity. */
 export const APP_VERSION = PANEL.version
+
+/* Release date of the current build, shown in the About modal. Bump alongside PANEL.version. */
+export const APP_RELEASE_DATE = 'August 31, 2026'
+
+/* Support address shown in the About modal — the shared LEAP inbox used by every LEAP panel. */
+export const SUPPORT_EMAIL = 'leap@octane5.com'
 
 /* Persisted-settings keys (local storage). */
 export const StorageKey = {
