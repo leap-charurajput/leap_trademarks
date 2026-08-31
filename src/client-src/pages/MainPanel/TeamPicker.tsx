@@ -24,7 +24,7 @@ export function TeamPicker({ withFavourite = false }: TeamPickerProps) {
 	   already sorted alphabetically. */
 	const teamOptions: DropdownOption<string>[] = selectedLeague.teams.map((tm) => ({
 		value: tm.TeamCode,
-		label: `${tm.TeamCode} — ${tm.FullName}`,
+		label: tm.FullName ? `${tm.TeamCode} — ${tm.FullName}` : tm.TeamCode,
 		colors: [tm.primaryColorCode, tm.secondaryColorCode],
 	}))
 	const favourite = isFavourite(selectedTeam.TeamCode)
@@ -52,7 +52,7 @@ export function TeamPicker({ withFavourite = false }: TeamPickerProps) {
 					</button>
 				</Tooltip>
 				<span className="tm-team-row__select">
-					<Tooltip content={selectedTeam.FullName}>
+					<Tooltip content={selectedTeam.FullName || selectedTeam.TeamCode}>
 						<SearchSelect<string>
 							value={selectedTeam.TeamCode}
 							options={teamOptions}

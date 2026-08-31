@@ -57,9 +57,9 @@ export function TeamsView() {
 				<div className="tm-fav-chips">
 					{favourites.map((f) => (
 						<span key={f.leagueCodeTeamName} className="tm-fav-chip">
-							<Tooltip content={`Select ${f.teamName}`}>
+							<Tooltip content={`Select ${f.teamName || f.teamID}`}>
 								<button type="button" className="tm-fav-chip__name" onClick={() => selectFavourite(f.leagueCode, f.teamID)}>
-									{f.leagueCode}-{f.teamName}
+									{f.leagueCode}-{f.teamName || f.teamID}
 								</button>
 							</Tooltip>
 							<Tooltip content={t('favourite.remove')}>
