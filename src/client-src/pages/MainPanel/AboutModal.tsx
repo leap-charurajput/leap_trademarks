@@ -27,7 +27,7 @@ export function AboutModal() {
 		>
 			<div className="tm-about">
 				<p className="tm-about__name">LEAP Trademarks</p>
-				<p className="tm-about__row">Version 5.0.1 (React)</p>
+				<p className="tm-about__row">Version 5.0.1</p>
 				<p className="tm-about__row">Release Date: June 13, 2026</p>
 				<p className="tm-about__row">Product Design: Hanaan Rosenthal</p>
 				<p className="tm-about__row">Development: Charu Rajput</p>
