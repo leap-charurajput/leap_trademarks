@@ -1238,7 +1238,7 @@
 	border-radius: var(--radius-button);
 }
 
-/* ---- Settings tab (shared section styles, formerly the LEAP Data Settings modal) ------------ */
+/* ---- Settings overlay body ------------------------------------------------------------------- */
 .tm-settings-overlay {
 	position: absolute;
 	inset: 0;
@@ -1329,37 +1329,24 @@
 	overflow-wrap: break-word;
 }
 
-.tm-datasettings {
-	display: flex;
-	flex-direction: column;
-	gap: var(--space-3);
-}
-
-.tm-datasettings__label {
-	margin: 0;
+.settings-data__label {
+	margin: 0 0 var(--space-2);
 	font-size: var(--font-11);
 	color: var(--color-text);
 }
 
-.tm-datasettings__path {
-	margin: 0;
+.settings-data__path {
+	margin: 0 0 var(--space-3);
 	font-size: var(--font-10);
 	color: var(--color-text-muted);
 	word-break: break-all;
 }
 
-/* Release-channel switcher section, separated from the data-folder block above. */
-.tm-datasettings__label--divided {
+/* Separates the Version section from the data-server block above it. */
+.settings-data__divided {
 	margin-top: var(--space-4);
 	padding-top: var(--space-4);
 	border-top: 1px solid var(--color-divider);
-}
-
-.tm-datasettings__hint {
-	margin: 0;
-	font-size: var(--font-10);
-	color: var(--color-text-muted);
-	line-height: 1.5;
 }
 
 .tm-server-row--active .tm-server-row__name,
