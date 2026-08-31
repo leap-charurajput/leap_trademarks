@@ -100,7 +100,6 @@ function shortColorName(pantone: string | undefined): string | undefined {
 /* ---- Raw on-disk shapes (only the fields we read) ---- */
 interface RawMasterTeam {
 	TeamCode: string
-	FullName: string
 }
 interface RawMasterLeague {
 	Code: string
@@ -232,7 +231,7 @@ function mapLogos(base: string, leagueCode: string, teamCode: string, raw: RawLo
 }
 
 /* Load one team: its info (TEAM_DATA) + colours & logos (TEAM_LOGOS). */
-async function loadTeam(base: string, leagueCode: string, code: string, fullName: string): Promise<Team> {
+async function loadTeam(base: string, leagueCode: string, code: string): Promise<Team> {
 	const [info, logoFile] = await Promise.all([
 		getJson<RawTeamData>(`${base}/JSON/TEAM_DATA/${leagueCode}/SLS_TEAM_${code}.json`),
 		/* A team's SLS_LOGO file is optional (no logosheet parsed yet). It's marked `expected` — NOT silent —
@@ -242,12 +241,20 @@ async function loadTeam(base: string, leagueCode: string, code: string, fullName
 	])
 	const colors = (logoFile.TeamColors ?? []).map(mapColor)
 	const logos = mapLogos(base, leagueCode, code, logoFile, colors)
+	/* SLS_TEAM is the source of truth for a team's fields; SLS_MASTER only indexes which teams exist
+	   (its FullName is a mirror Team Info writes, not a second source — falling back to it would show
+	   this one field from a different file than every other field on the team).
+	   A name can be absent from both, and we deliberately do NOT invent one from the nickname or the
+	   code: it shows empty so the gap in the server data stays visible (and fixable in Team Info).
+	   It only has to be a string — an undefined FullName threw in the league sort below and took the
+	   whole catalog down. */
+	const fullName = info.FullName ?? ''
 	const name = info.TeamName ?? fullName
 	const city = info.TeamCity ?? ''
 	return {
 		Id: `${leagueCode}-${code}`,
 		TeamCode: code,
-		FullName: info.FullName ?? fullName,
+		FullName: fullName,
 		TeamName: name,
 		TeamCity: city,
 		ShortName: info.Nickname ?? code,
@@ -257,7 +264,7 @@ async function loadTeam(base: string, leagueCode: string, code: string, fullName
 		primaryColorCode: colors[0]?.Hex ?? '#000000',
 		secondaryColorCode: colors[1]?.Hex ?? colors[0]?.Hex ?? '#000000',
 		colors,
-		verbiage: [info.FullName ?? fullName, name, city, code, info.TeamConference ?? '', info.EstablishedYear ?? ''].filter(Boolean),
+		verbiage: [fullName, name, city, code, info.TeamConference ?? '', info.EstablishedYear ?? ''].filter(Boolean),
 		logos,
 	}
 }
@@ -271,6 +278,13 @@ function leagueLogos(base: string, leagueCode: string, files: string[] | undefin
 		imgSrc: `${base}/LEAGUES/LOGOS/${leagueCode}/png/${file}`,
 		updatedTime: '',
 	}))
+}
+
+/* Sort a league's teams by name, with the nameless ones (missing from the server data) last rather
+   than first — `teams[0]` is what the panel auto-selects when you switch leagues. */
+function byName(a: Team, b: Team): number {
+	if (!a.FullName || !b.FullName) return (a.FullName ? 0 : 1) - (b.FullName ? 0 : 1) || a.TeamCode.localeCompare(b.TeamCode)
+	return a.FullName.localeCompare(b.FullName)
 }
 
 /*
@@ -287,7 +301,7 @@ export async function loadCatalog(base: string, reader?: JsonReader): Promise<Le
 			const teams = await Promise.all(
 				ml.Teams.map(async (mt) => {
 					try {
-						return await loadTeam(base, ml.Code, mt.TeamCode, mt.FullName)
+						return await loadTeam(base, ml.Code, mt.TeamCode)
 					} catch {
 						return null
 					}
@@ -297,7 +311,7 @@ export async function loadCatalog(base: string, reader?: JsonReader): Promise<Le
 				Id: `league-${ml.Code}`,
 				Code: ml.Code,
 				Name: ml.Name ?? ml.Code,
-				teams: teams.filter((t): t is Team => t != null).sort((a, b) => a.FullName.localeCompare(b.FullName)),
+				teams: teams.filter((t): t is Team => t != null).sort(byName),
 				leagueLogos: leagueLogos(base, ml.Code, ml.LeagueLogos, 'll'),
 				leagueServerLogos: leagueLogos(base, ml.Code, ml.LeagueServerLogos, 'lsl'),
 			}

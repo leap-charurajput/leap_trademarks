@@ -366,7 +366,9 @@ export function TrademarksProvider({ children }: { children: ReactNode }) {
 		[selectedTeam, selectedLogoSet, selectedBgColor],
 	)
 
-	const favKey = (leagueCode: string, team: Team) => `${leagueCode}-${team.FullName}`
+	/* Keyed by name, but a team whose name is missing from the server data falls back to its code —
+	   otherwise every nameless team in a league would share the key and clobber each other's chip. */
+	const favKey = (leagueCode: string, team: Team) => `${leagueCode}-${team.FullName || team.TeamCode}`
 
 	const isFavourite = useCallback(
 		(teamCode: string) => favourites.some((f) => f.teamID === teamCode && f.leagueCode === selectedLeagueCode),
