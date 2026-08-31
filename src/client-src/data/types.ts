@@ -14,7 +14,7 @@ export type ColorView = 'list' | 'grid'
 
 /* Main tabs (legacy `activeTab`: teamView | LeagueView | LeagueLogoView), plus the panel's own
    `manage` tab (Manage Logos — delete logo versions / sets from the server). */
-export type TabId = 'teams' | 'league' | 'leagueLogos' | 'create' | 'manage'
+export type TabId = 'teams' | 'league' | 'leagueLogos' | 'create' | 'manage' | 'settings'
 
 /* A single team colour with its print metadata (legacy `colorData[]`). */
 export interface ColorInfo {

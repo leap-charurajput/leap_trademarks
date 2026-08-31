@@ -1,24 +1,21 @@
 /*
- * DataSettingsModal — the flyout "LEAP Data Settings". Shows the current Logobase data folder and lets
- * the user pick a new one (native folder picker, CEP only). Choosing a folder persists it as the active
- * Logobase path (data settings JSON) and reloads the catalog. In the browser there is no folder picker,
- * so Choose raises an info toast.
- *
- * Also hosts the release-channel switcher: pick which deployed web-app (Production / Development /
- * Beta / Localhost) the panel runs. The CHANNEL ID is persisted to Documents/LEAP Settings/
- * LEAP_Trademarks/Trademarks_Config.json (re-resolved by the shell against the hosted registry on
- * every panel start), and the panel then SWITCHES IN PLACE: the choice is probed and, when
- * reachable, the page navigates to the new version immediately — no Illustrator restart. An
- * unreachable target (typically Localhost without a dev server) stays saved but is not navigated
- * to: the current version keeps running and the shell picks the choice up on the next panel open.
+ * SettingsTab — the ⚙ tab after Manage. Two panel settings in one place:
+ *   1. Logobase data folder — shows the active server path, Locate… picks a new one (CEP folder
+ *      picker; persists to the shared logobaseDataPathSettings.json and reloads the catalog).
+ *   2. Panel version — the release-channel switcher (Production / Development / Beta / Localhost).
+ *      The CHANNEL ID is persisted to Documents/LEAP Settings/LEAP_Trademarks/Trademarks_Config.json
+ *      (re-resolved by the shell against the hosted registry on every panel start), and the panel
+ *      then SWITCHES IN PLACE: the choice is probed and, when reachable, the page navigates to the
+ *      new version immediately — no Illustrator restart (same behaviour as LEAP Utilities). An
+ *      unreachable target stays saved but is not navigated to; the shell picks it up next open.
  */
 import { useState } from 'react'
-import { Button, Dropdown, Modal } from '../../components'
-import { ButtonVariant, Size, ToastType } from '../../enums'
+import { Button, Dropdown } from '../../components'
+import { Size, ToastType } from '../../enums'
 import { useTranslation } from '../../context/LocaleContext'
 import { useToast } from '../../context/ToastContext'
 import { useTrademarks } from '../../context/TrademarksContext'
-import { APP_ENVIRONMENTS, detectRunningEnvironment, environmentForOrigin, type AppEnvironmentId } from '../../constants'
+import { APP_ENVIRONMENTS, APP_VERSION, detectRunningEnvironment, environmentForOrigin, type AppEnvironmentId } from '../../constants'
 import controller from '../../controller'
 
 /* How long an unreachable-target toast stays — it carries the "what happens next" explanation. */
@@ -50,26 +47,23 @@ async function probeOrigin(origin: string): Promise<boolean> {
 	}
 }
 
-export function DataSettingsModal() {
+export function SettingsTab() {
 	const { t } = useTranslation()
 	const { notify } = useToast()
-	const { dataSettingsOpen, setDataSettingsOpen, currentServer, addServerFolder } = useTrademarks()
+	const { currentServer, addServerFolder } = useTrademarks()
 	const running = detectRunningEnvironment()
 
-	/* The dropdown reflects the SAVED choice (what loads on next start), which is the running
-	   environment until the user switches. Pre-channel config files carry only an Origin, so fall
-	   back to matching it; unknown/missing configs fall back to the running channel, then Production. */
+	/* The dropdown reflects the SAVED choice, which is the running environment until the user
+	   switches. Pre-channel config files carry only an Origin, so fall back to matching it;
+	   unknown/missing configs fall back to the running channel, then Production. */
 	const [selected, setSelected] = useState<AppEnvironmentId>(() => {
 		const saved = controller.getSavedEnvironment()
 		const savedEnv = APP_ENVIRONMENTS.find((env) => env.id === saved?.environment) ?? environmentForOrigin(saved?.origin)
 		return (savedEnv ?? running ?? APP_ENVIRONMENTS[0]).id
 	})
 
-	if (!dataSettingsOpen) return null
-
 	const choose = () => {
-		if (addServerFolder()) setDataSettingsOpen(false)
-		else notify(t('feature.pending', { feature: 'Locate folder (Illustrator only)' }), ToastType.Info)
+		if (!addServerFolder()) notify(t('feature.pending', { feature: 'Locate folder (Illustrator only)' }), ToastType.Info)
 	}
 
 	const envOptions = APP_ENVIRONMENTS.map((env) => ({ value: env.id, label: t(env.labelKey) }))
@@ -107,31 +101,20 @@ export function DataSettingsModal() {
 	}
 
 	return (
-		<Modal
-			open={dataSettingsOpen}
-			title={t('flyout.dataSettings')}
-			width={340}
-			onClose={() => setDataSettingsOpen(false)}
-			footer={
-				<div className="tm-modal-footer">
-					<Button variant={ButtonVariant.Secondary} size={Size.Small} onClick={() => setDataSettingsOpen(false)}>
-						{t('action.close')}
-					</Button>
-				</div>
-			}
-		>
-			<div className="tm-datasettings">
-				<p className="tm-datasettings__label">Logobase data folder</p>
-				<p className="tm-datasettings__path">{currentServer?.path ?? 'Not set'}</p>
-				<Button size={Size.Small} onClick={choose}>
-					{t('welcome.locate')}
-				</Button>
+		<div className="tm-settingstab tm-datasettings">
+			<p className="tm-datasettings__label">{t('settings.dataFolder')}</p>
+			<p className="tm-datasettings__path">{currentServer?.path ?? t('settings.dataFolderUnset')}</p>
+			<Button size={Size.Small} onClick={choose}>
+				{t('welcome.locate')}
+			</Button>
 
-				<p className="tm-datasettings__label tm-datasettings__label--divided">{t('settings.version')}</p>
-				<Dropdown value={selected} options={envOptions} onChange={(id) => void onEnvChange(id)} fullWidth showSelectedTick />
-				{running && <p className="tm-datasettings__hint">{t('settings.running', { name: t(running.labelKey) })}</p>}
-				<p className="tm-datasettings__hint">{t('settings.help')}</p>
-			</div>
-		</Modal>
+			<p className="tm-datasettings__label tm-datasettings__label--divided">{t('settings.version')}</p>
+			<Dropdown value={selected} options={envOptions} onChange={(id) => void onEnvChange(id)} fullWidth showSelectedTick />
+			{running && <p className="tm-datasettings__hint">{t('settings.running', { name: t(running.labelKey) })}</p>}
+			<p className="tm-datasettings__hint">{t('settings.help')}</p>
+
+			<p className="tm-datasettings__label tm-datasettings__label--divided">{t('settings.panelVersion')}</p>
+			<p className="tm-datasettings__hint">v{APP_VERSION}</p>
+		</div>
 	)
 }

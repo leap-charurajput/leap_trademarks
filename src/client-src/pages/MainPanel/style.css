@@ -1238,7 +1238,19 @@
 	border-radius: var(--radius-button);
 }
 
-/* ---- LEAP Data Settings modal --------------------------------------------------------------- */
+/* ---- Settings tab (shared section styles, formerly the LEAP Data Settings modal) ------------ */
+.tm-settingstab {
+	padding: var(--space-4);
+	overflow-y: auto;
+	min-height: 0;
+}
+
+.tm-tab--icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .tm-datasettings {
 	display: flex;
 	flex-direction: column;

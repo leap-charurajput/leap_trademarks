@@ -19,6 +19,7 @@ import { TeamsView } from './TeamsView'
 import { LeagueView } from './LeagueView'
 import { LeagueLogosView } from './LeagueLogosView'
 import { ManageLogosView } from './ManageLogosView'
+import { SettingsTab } from './SettingsTab'
 import { LogosheetBuilder } from './LogosheetBuilder'
 import { LogoSheetView } from './LogoSheetView'
 import { ServerBar } from './ServerBar'
@@ -28,10 +29,12 @@ import { PanelOverlays } from './PanelOverlays'
 import { DevStateBar } from './DevStateBar'
 import './style.css'
 
-const TABS: { id: TabId; key: 'tab.teams' | 'tab.league' | 'tab.create' | 'tab.manage' }[] = [
+/* The settings tab renders as a ⚙ icon instead of a text label (icon: true). */
+const TABS: { id: TabId; key: 'tab.teams' | 'tab.league' | 'tab.create' | 'tab.manage' | 'tab.settings'; icon?: boolean }[] = [
 	{ id: 'teams', key: 'tab.teams' },
 	{ id: 'league', key: 'tab.league' },
 	{ id: 'manage', key: 'tab.manage' },
+	{ id: 'settings', key: 'tab.settings', icon: true },
 	/* Logosheets (Export LEAP Assets) tab hidden for now — kept in code, just not listed.
 	   Restore by re-adding: { id: 'create', key: 'tab.create' }, */
 	// { id: 'create', key: 'tab.create' },
@@ -156,10 +159,11 @@ export function MainPanel() {
 										type="button"
 										role="tab"
 										aria-selected={activeTab === tab.id}
-										className={`tm-tab ${activeTab === tab.id ? 'tm-tab--active' : ''}`}
+										className={`tm-tab ${tab.icon ? 'tm-tab--icon' : ''} ${activeTab === tab.id ? 'tm-tab--active' : ''}`}
 										onClick={() => setActiveTab(tab.id)}
+										aria-label={t(tab.key)}
 									>
-										{t(tab.key)}
+										{tab.icon ? <span className="exp-icon exp-icon--sm exp-icon--settings" aria-hidden /> : t(tab.key)}
 									</button>
 								</Tooltip>
 							))}
@@ -171,6 +175,7 @@ export function MainPanel() {
 							{activeTab === 'leagueLogos' && <LeagueLogosView />}
 							{activeTab === 'manage' && <ManageLogosView />}
 							{activeTab === 'create' && <LogosheetBuilder />}
+						{activeTab === 'settings' && <SettingsTab />}
 						</div>
 					</>
 				)}

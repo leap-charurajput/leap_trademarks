@@ -24,6 +24,7 @@ export const en = {
 	'tab.league': 'League',
 	'tab.leagueLogos': 'League Logos',
 	'tab.manage': 'Manage',
+	'tab.settings': 'Settings',
 
 	/* Top selectors. */
 	'label.league': 'League',
@@ -189,7 +190,6 @@ export const en = {
 	/* Flyout menu. */
 	'flyout.refreshServer': 'Refresh Server Connection',
 	'flyout.manageServers': 'Manage Servers',
-	'flyout.dataSettings': 'LEAP Data Settings',
 	'flyout.labSwatches': 'Create color swatches in Lab color space',
 	'flyout.importExcel': 'Import Excel Data',
 	'flyout.openLogs': 'Open Logs Folder',
@@ -197,7 +197,10 @@ export const en = {
 	'flyout.about': 'About LEAP Trademarks',
 
 	/* Release-channel switcher (LEAP Data Settings) + version footer. */
-	'settings.version': 'Panel version',
+	'settings.dataFolder': 'Logobase data folder',
+	'settings.dataFolderUnset': 'Not set',
+	'settings.version': 'Version',
+	'settings.panelVersion': 'Panel build',
 	'settings.running': 'Currently running: {name}',
 	'settings.help': 'Choose which LEAP Trademarks version the panel runs. Switching applies immediately — no restart needed.',
 	'settings.switching': 'Switching to {name}…',
