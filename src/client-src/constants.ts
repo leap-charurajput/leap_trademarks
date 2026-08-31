@@ -27,8 +27,13 @@ export const CepEvent = {
 	ThemeColorChanged: 'com.adobe.csxs.events.ThemeColorChanged',
 } as const
 
-/* CEF remote-debugging URL for this CEP panel (open in Chrome). Port matches zxp/plugin/.debug. */
-export const DEBUG_CONSOLE_URL = 'http://localhost:9002'
+/* This panel's CEP extension id — matches zxp/plugin/CSXS/manifest.xml and zxp/plugin/.debug. Used
+   to pick this extension's entry out of the installed .debug file. */
+export const EXTENSION_ID = 'com.LEAP.LEAPTrademarks'
+
+/* CEF remote-debugging port, used only when the installed .debug file cannot be read. The real port
+   comes from that file at runtime (controller.openDebugConsole), so the two can never drift. */
+export const DEBUG_CONSOLE_FALLBACK_PORT = 9002
 
 /*
  * Release channels (web-app deployment model, one git branch → one hosted deployment each). The

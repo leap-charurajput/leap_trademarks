@@ -5,6 +5,13 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>LEAP Trademarks</title>
+	<!--
+		Pre-React skeleton (ported from LEAP Utilities): the JS bundle takes a moment to download/parse
+		(panel open, and every in-place version switch), and an unstyled page reads as a broken black
+		window. The skeleton paints instantly — background matched to the SAVED Adobe theme so there is
+		no flash — and is replaced wholesale when React mounts into #root. Layout mirrors the panel:
+		league row → tab strip → content bars → server bar + version footer.
+	-->
 	<style>
 		:root {
 			--lskel-bg: #323232;
@@ -51,11 +58,18 @@
 		@media (prefers-reduced-motion: reduce) { .lskel-bar::after { animation: none; } }
 	</style>
 	<script>
+		/* Match the skeleton to the user's saved Adobe theme so the first paint never flashes the
+		   wrong brightness. Dark is the default (Illustrator's default UI). */
 		try {
 			var lskelTheme = localStorage.getItem('leap.trademarks.theme') || '';
 			if (lskelTheme.indexOf('light') !== -1) document.documentElement.className += ' lskel-light';
-		} catch (e) {}
+		} catch (e) { /* default dark */ }
 	</script>
+	<!--
+		CEP bootstrap: when running inside Illustrator we must load CSInterface.js
+		before the React app mounts. In a browser we start immediately.
+		See AGENTS.md §4 (host bridge) for why this lives outside React.
+	-->
 	<script>
 		(function () {
 			var isCEP = typeof window.__adobe_cep__ !== 'undefined' ||
