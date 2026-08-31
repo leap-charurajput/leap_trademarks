@@ -30,6 +30,7 @@ const overrides: Partial<Record<TranslationKey, string>> = {
 	'section.teamInfo': '球队信息',
 	'view.list': '列表视图',
 	'view.grid': '网格视图',
+	'flyout.debugConsoleFailed': '无法打开调试控制台。',
 	'flyout.about': '关于 LEAP 商标',
 	'validate.run': '校验标志表',
 	'validate.running': '正在校验…',

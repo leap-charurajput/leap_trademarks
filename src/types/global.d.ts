@@ -10,6 +10,7 @@ declare global {
 		CSInterface?: new () => unknown
 		cep?: {
 			fs?: Record<string, (...args: unknown[]) => { err: number; data?: string }>
+			util?: { openURLInDefaultBrowser?: (url: string) => void }
 		}
 		cep_node?: {
 			require?: (id: string) => unknown

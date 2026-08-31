@@ -193,6 +193,7 @@ export const en = {
 	'flyout.importExcel': 'Import Excel Data',
 	'flyout.openLogs': 'Open Logs Folder',
 	'flyout.debugConsole': 'Open Debug Console',
+	'flyout.debugConsoleFailed': 'Could not open the debug console.',
 	'flyout.about': 'About LEAP Trademarks',
 
 	/* Release-channel switcher (LEAP Data Settings) + version footer. */

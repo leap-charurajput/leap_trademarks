@@ -17,6 +17,7 @@ export interface CSInterfaceLike {
 	dispatchEvent(event: unknown): void
 	setPanelFlyoutMenu(menu: string): void
 	updatePanelMenuItem(menuItemLabel: string, enabled: boolean, checked: boolean): void
+	openURLInDefaultBrowser(url: string): void
 }
 
 /*
@@ -173,6 +174,41 @@ export function readFileBase64(pathOrFileUrl: string): string | null {
 		/* fall through to null */
 	}
 	return null
+}
+
+/*
+ * Open a url in the user's DEFAULT SYSTEM BROWSER. `window.open` is not usable here: inside CEP it
+ * opens another CEF window owned by Illustrator (which cannot attach to the remote-debugging port),
+ * so anything meant for a real browser must go through cep.util. Returns false when it could not
+ * open. Falls back to window.open in the dev browser build.
+ */
+export function openUrlInDefaultBrowser(url: string): boolean {
+	try {
+		const cs = getCSInterface()
+		if (cs?.openURLInDefaultBrowser) {
+			cs.openURLInDefaultBrowser(url)
+			return true
+		}
+		const util = (window as unknown as { cep?: { util?: { openURLInDefaultBrowser?: (u: string) => void } } }).cep?.util
+		if (util?.openURLInDefaultBrowser) {
+			util.openURLInDefaultBrowser(url)
+			return true
+		}
+		if (!isCEP()) return !!window.open(url, '_blank')
+	} catch {
+		/* fall through */
+	}
+	return false
+}
+
+/* OS path to this panel's INSTALLED extension folder (where CSXS/ and .debug live). Null outside CEP.
+   Still the local folder when the panel itself is served from a remote origin by the ZXP shell. */
+export function getExtensionPath(): string | null {
+	try {
+		return getCSInterface()?.getSystemPath?.('extension') ?? null
+	} catch {
+		return null
+	}
 }
 
 /* OS path to the user's Documents folder (CEP only); null in the browser. */

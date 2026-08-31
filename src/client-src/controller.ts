@@ -22,11 +22,13 @@ import {
 	listFilesInFolder,
 	openPath,
 	getDocumentsPath,
+	getExtensionPath,
+	openUrlInDefaultBrowser,
 	ensureDir,
 	removeDir,
 	deleteFile,
 } from '@lib/helper'
-import { TrademarksConfig } from './constants'
+import { DEBUG_CONSOLE_FALLBACK_PORT, EXTENSION_ID, TrademarksConfig } from './constants'
 import * as XLSX from 'xlsx'
 import { getHost, type ActiveDocumentState, type ArtboardInfo, type AssignedSpot, type BuildLogoType, type BuildLogosheetArgs, type DocumentInfo, type ExportedLogoRecord, type ExtractedColor, type ParseColor, type ParseResult, type SwatchColor, type ValidationResult } from '@lib/host'
 import { logger } from '@lib/logger'
@@ -1540,6 +1542,36 @@ class Controller {
 			return []
 		}
 		return result.data?.lines ?? []
+	}
+
+	/* ---- Debug console --------------------------------------------------------------------------- */
+
+	/*
+	 * The CEF remote-debugging port THIS panel actually listens on, read from the installed extension's
+	 * own `.debug` file — the very file CEP reads to open the port. Reading it (instead of trusting a
+	 * constant) means the menu can never point at a stale port after the .debug is edited or the panel
+	 * is installed alongside another LEAP panel. Falls back to the build-time constant when the file is
+	 * missing or unparseable (e.g. a signed install without .debug, or the dev browser build).
+	 */
+	private debugConsolePort(): number {
+		const dir = getExtensionPath()
+		const xml = dir ? readTextFile(`${dir}/.debug`) : null
+		if (!xml) return DEBUG_CONSOLE_FALLBACK_PORT
+		/* A .debug may list several extensions — use the block for THIS extension id, else the whole file. */
+		const blocks = xml.split(/<Extension\b/)
+		const mine = blocks.find((block) => block.indexOf(`"${EXTENSION_ID}"`) !== -1)
+		const port = Number((mine ?? xml).match(/Port\s*=\s*"(\d+)"/)?.[1])
+		return port > 0 ? port : DEBUG_CONSOLE_FALLBACK_PORT
+	}
+
+	/* Open this panel's CEF debug console in the DEFAULT SYSTEM BROWSER (window.open would only spawn
+	   another Illustrator-owned CEF window, which cannot attach to the port). Returns true on success. */
+	openDebugConsole(): boolean {
+		const url = `http://localhost:${this.debugConsolePort()}`
+		const opened = openUrlInDefaultBrowser(url)
+		if (opened) logger.info('Debug', `Opened debug console at ${url}`)
+		else logger.warn('Debug', `Could not open the debug console at ${url}`)
+		return opened
 	}
 
 	/* ---- Settings (panel environment) ----------------------------------------------------------- */
