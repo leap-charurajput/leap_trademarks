@@ -199,8 +199,10 @@ export const en = {
 	/* Release-channel switcher (LEAP Data Settings) + version footer. */
 	'settings.version': 'Panel version',
 	'settings.running': 'Currently running: {name}',
-	'settings.help': 'Choose which LEAP Trademarks version the panel loads. Changing it requires an Illustrator restart to take effect.',
-	'settings.restartRequired': 'Version set to {name}. Restart Illustrator to apply the change.',
+	'settings.help': 'Choose which LEAP Trademarks version the panel runs. Switching applies immediately — no restart needed.',
+	'settings.switching': 'Switching to {name}…',
+	'settings.switchUnreachable': 'Saved — {name} is not reachable right now. It will load the next time the panel opens.',
+	'settings.localhostNotRunning': 'Saved — the local dev server is not running (run npm run dev). It will load the next time the panel opens.',
 	'settings.noRestartNeeded': 'Already running the {name} version.',
 	'settings.saveFailed': 'Could not save the version setting.',
 	'env.production': 'Production',

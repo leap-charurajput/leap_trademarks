@@ -64,8 +64,10 @@ const overrides: Partial<Record<TranslationKey, string>> = {
 
 	'settings.version': '面板版本',
 	'settings.running': '当前运行：{name}',
-	'settings.help': '选择面板加载的 LEAP Trademarks 版本。更改需要重启 Illustrator 才能生效。',
-	'settings.restartRequired': '版本已设置为 {name}。请重启 Illustrator 以应用更改。',
+	'settings.help': '选择面板运行的 LEAP Trademarks 版本。切换立即生效 — 无需重启。',
+	'settings.switching': '正在切换到 {name}…',
+	'settings.switchUnreachable': '已保存 — {name} 当前不可访问，将在下次打开面板时加载。',
+	'settings.localhostNotRunning': '已保存 — 本地开发服务器未运行（请运行 npm run dev），将在下次打开面板时加载。',
 	'settings.noRestartNeeded': '当前已在运行 {name} 版本。',
 	'settings.saveFailed': '无法保存版本设置。',
 	'env.production': '生产环境',

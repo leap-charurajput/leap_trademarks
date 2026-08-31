@@ -10,6 +10,8 @@ import { LogosheetBuilderProvider } from './context/LogosheetBuilderContext'
 import { PanelFlyoutSetup } from './components/PanelFlyoutSetup'
 import { VersionFooter } from './components'
 import { MainPanel } from './pages/MainPanel'
+import { AboutModal } from './pages/MainPanel/AboutModal'
+import { DataSettingsModal } from './pages/MainPanel/DataSettingsModal'
 import { LoginView } from './pages/LoginView'
 import './App.css'
 
@@ -43,6 +45,12 @@ function AuthGate() {
 				<div className="app">
 					<MainPanel />
 					<VersionFooter />
+					{/* Flyout-opened dialogs live at app level so they work in EVERY panel state —
+					    inside MainPanel's ready-only return they were unreachable from the overlay
+					    states (no server / no data / error), which is exactly when the version
+					    switcher in Data Settings is needed most. */}
+					<AboutModal />
+					<DataSettingsModal />
 				</div>
 			</LogosheetBuilderProvider>
 		</TrademarksProvider>
