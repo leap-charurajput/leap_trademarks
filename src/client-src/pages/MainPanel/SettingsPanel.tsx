@@ -2,15 +2,18 @@
  * SettingsPanel — the full-panel Settings view opened from the ⚙ button in the version footer.
  * The footer is app-level and always visible, so Settings is reachable in EVERY panel state (no
  * document open, no server, no data — unlike a tab, which only exists with a team document).
- * Two panel settings in one place:
- *   1. Logobase data folder — shows the active server path, Locate… picks a new one (CEP folder
- *      picker; persists to the shared logobaseDataPathSettings.json and reloads the catalog).
- *   2. Panel version — the release-channel switcher (Production / Development / Beta / Localhost).
- *      The CHANNEL ID is persisted to Documents/LEAP Settings/LEAP_Trademarks/Trademarks_Config.json
+ *
+ * Layout and labels MIRROR LEAP Utilities' Settings tab (same field-row / field-hint classes and
+ * strings) so the two panels stay visually consistent. Contents:
+ *   1. Version — the release-channel switcher (Production / Development / Beta / Localhost). The
+ *      CHANNEL ID is persisted to Documents/LEAP Settings/LEAP_Trademarks/Trademarks_Config.json
  *      (re-resolved by the shell against the hosted registry on every panel start), and the panel
  *      then SWITCHES IN PLACE: the choice is probed and, when reachable, the page navigates to the
- *      new version immediately — no Illustrator restart (same behaviour as LEAP Utilities). An
- *      unreachable target stays saved but is not navigated to; the shell picks it up next open.
+ *      new version immediately — no Illustrator restart. An unreachable target stays saved but is
+ *      not navigated to; the shell picks it up next open.
+ *   2. Panel version — the build number.
+ *   3. LEAP data server (Trademarks-only, not in Utilities) — the active Logobase folder +
+ *      Locate… (persists to the shared logobaseDataPathSettings.json and reloads the catalog).
  */
 import { useState } from 'react'
 import { Button, Dropdown } from '../../components'
@@ -111,20 +114,33 @@ export function SettingsPanel({ onClose }: { onClose: () => void }) {
 					×
 				</button>
 			</div>
-			<div className="tm-settingstab tm-datasettings">
-			<p className="tm-datasettings__label">{t('settings.dataFolder')}</p>
-			<p className="tm-datasettings__path">{currentServer?.path ?? t('settings.dataFolderUnset')}</p>
-			<Button size={Size.Small} onClick={choose}>
-				{t('welcome.locate')}
-			</Button>
+			<div className="tm-settingstab">
+				{/* Rows mirror LEAP Utilities' Settings tab (same field-row / field-hint classes). */}
+				<div className="field-row">
+					<span className="field-row__label">{t('settings.version')}</span>
+					<div className="field-row__control">
+						<Dropdown value={selected} options={envOptions} onChange={(id) => void onEnvChange(id)} fullWidth showSelectedTick />
+					</div>
+				</div>
+				{running && <p className="field-hint">{t('settings.running', { name: t(running.labelKey) })}</p>}
 
-			<p className="tm-datasettings__label tm-datasettings__label--divided">{t('settings.version')}</p>
-			<Dropdown value={selected} options={envOptions} onChange={(id) => void onEnvChange(id)} fullWidth showSelectedTick />
-			{running && <p className="tm-datasettings__hint">{t('settings.running', { name: t(running.labelKey) })}</p>}
-			<p className="tm-datasettings__hint">{t('settings.help')}</p>
+				<div className="field-row">
+					<span className="field-row__label">{t('settings.panelVersion')}</span>
+					<span>{APP_VERSION}</span>
+				</div>
 
-			<p className="tm-datasettings__label tm-datasettings__label--divided">{t('settings.panelVersion')}</p>
-				<p className="tm-datasettings__hint">v{APP_VERSION}</p>
+				<p className="field-hint">{t('settings.help')}</p>
+
+				{/* Trademarks-only: the LEAP data server (Logobase folder) — Utilities has no server. */}
+				<div className="field-row field-row--top">
+					<span className="field-row__label">{t('settings.dataFolder')}</span>
+					<div className="field-row__control">
+						<p className="field-hint">{currentServer?.path ?? t('settings.dataFolderUnset')}</p>
+						<Button size={Size.Small} onClick={choose}>
+							{t('welcome.locate')}
+						</Button>
+					</div>
+				</div>
 			</div>
 		</div>
 	)
