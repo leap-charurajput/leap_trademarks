@@ -63,7 +63,7 @@ const overrides: Partial<Record<TranslationKey, string>> = {
 	'build.exportTcGap': '导出前请为每个 TC 列指定颜色。',
 
 	'settings.title': '设置',
-	'settings.dataFolder': 'Logobase 数据文件夹',
+	'settings.dataFolder': 'LEAP 数据服务器',
 	'settings.dataFolderUnset': '未设置',
 	'settings.version': '版本',
 	'settings.panelVersion': '面板构建',

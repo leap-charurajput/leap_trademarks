@@ -197,7 +197,7 @@ export const en = {
 
 	/* Release-channel switcher (LEAP Data Settings) + version footer. */
 	'settings.title': 'Settings',
-	'settings.dataFolder': 'Logobase data folder',
+	'settings.dataFolder': 'LEAP data server',
 	'settings.dataFolderUnset': 'Not set',
 	'settings.version': 'Version',
 	'settings.panelVersion': 'Panel build',
