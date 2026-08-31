@@ -1287,6 +1287,48 @@
 	min-height: 0;
 }
 
+/* Settings rows — SAME classes/values as LEAP Utilities' Settings tab, so the two panels'
+   settings screens stay visually identical (consistency rule). */
+.panel-title {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+	min-height: 20px;
+	margin-bottom: var(--space-4);
+	font-size: var(--font-12);
+	font-weight: 700;
+	color: var(--color-text);
+}
+
+.field-row {
+	display: flex;
+	align-items: center;
+	gap: var(--space-4);
+	min-height: 24px;
+	padding: var(--space-2) 0;
+}
+
+.field-row--top {
+	align-items: flex-start;
+}
+
+.field-row__label {
+	flex-shrink: 0;
+	min-width: 64px;
+	color: var(--color-text);
+}
+
+.field-row__control {
+	flex: 1;
+	min-width: 0;
+}
+
+.field-hint {
+	color: var(--color-text-muted);
+	font-size: var(--font-10);
+	overflow-wrap: break-word;
+}
+
 .tm-datasettings {
 	display: flex;
 	flex-direction: column;
