@@ -36,7 +36,6 @@ var TM_LSV_CODE = {
 	NO_SET_NAMES: "NO_SET_NAMES",
 	SET_NAME_OUTSIDE_BACKGROUND: "SET_NAME_OUTSIDE_BACKGROUND",
 	SET_NAME_NOT_IN_BACKGROUND: "SET_NAME_NOT_IN_BACKGROUND",
-	OTHER_NO_SET_NAMES: "OTHER_NO_SET_NAMES",
 	MISSING_BACKGROUND_COLOR: "MISSING_BACKGROUND_COLOR",
 	INVALID_BACKGROUND_COLOR: "INVALID_BACKGROUND_COLOR",
 	EMPTY_COLOR_NAME: "EMPTY_COLOR_NAME",
@@ -307,19 +306,19 @@ function tmLsvCheckSetNames(doc, out) {
 	if (!setLayer) return;
 	if (setLayer.pageItems.length === 0) {
 		/* A sheet whose only logo artboard is "LOGOS:Other" legitimately has an empty Set Names
-		   layer (the parser exports those logos into the "OTHER" set automatically) — warn there
-		   instead of blocking the parse with an error. */
+		   layer (the parser exports those logos into the "OTHER" set automatically) — report
+		   nothing for it; the error stands for every other sheet. */
 		var onlyOther = true;
 		for (var a = 0; a < doc.artboards.length; a++) {
 			var an = String(doc.artboards[a].name);
 			if (an === TM_LS.COLOR_ARTBOARD) continue;
 			if (an.toLowerCase() !== "logos:other") { onlyOther = false; break; }
 		}
-		out[onlyOther ? "warnings" : "errors"].push(tmLsvIssue(
+		if (onlyOther) return;
+		out.errors.push(tmLsvIssue(
 			TM_LSV_CODE.NO_SET_NAMES,
-			"No set names found on the '" + TM_LS.SET_NAMES + "' layer." +
-				(onlyOther ? " Expected here: only the 'LOGOS:Other' artboard is present." : ""),
-			onlyOther ? "warning" : "error",
+			"No set names found on the '" + TM_LS.SET_NAMES + "' layer.",
+			"error",
 			{ layer: TM_LS.SET_NAMES }
 		));
 	}
@@ -402,18 +401,9 @@ function tmLsvCheckSetNamePositioning(doc, out) {
 		if (!abCells.length) continue;
 
 		/* The "LOGOS:Other" artboard is the designed exception: it carries NO set names — the parser
-		   exports its logos into the "OTHER" set automatically. Matching its rows against set-name
-		   frames would flood the report with misleading per-row messages, so surface one informational
-		   warning instead and skip the row matching. */
-		if (String(artboard.name).toLowerCase() === "logos:other") {
-			out.warnings.push(tmLsvIssue(
-				TM_LSV_CODE.OTHER_NO_SET_NAMES,
-				"Artboard '" + artboard.name + "' has no set names — this is expected: its logos are exported into the 'OTHER' set automatically.",
-				"warning",
-				{ artboardName: String(artboard.name), logoCount: abCells.length }
-			));
-			continue;
-		}
+		   exports its logos into the "OTHER" set automatically — so it is exempt from set-name
+		   matching entirely. No issue is reported for it (per Charu: nothing should show). */
+		if (String(artboard.name).toLowerCase() === "logos:other") continue;
 
 		var rows = tmLsvGroupRows(abCells);
 		for (var r = 0; r < rows.length; r++) {
