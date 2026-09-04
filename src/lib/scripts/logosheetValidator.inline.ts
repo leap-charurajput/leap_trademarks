@@ -305,6 +305,16 @@ function tmLsvCheckSetNames(doc, out) {
 	var setLayer = tmLsLayer(doc, TM_LS.SET_NAMES);
 	if (!setLayer) return;
 	if (setLayer.pageItems.length === 0) {
+		/* A sheet whose only logo artboard is "LOGOS:Other" legitimately has an empty Set Names
+		   layer (the parser exports those logos into the "OTHER" set automatically) — report
+		   nothing for it; the error stands for every other sheet. */
+		var onlyOther = true;
+		for (var a = 0; a < doc.artboards.length; a++) {
+			var an = String(doc.artboards[a].name);
+			if (an === TM_LS.COLOR_ARTBOARD) continue;
+			if (an.toLowerCase() !== "logos:other") { onlyOther = false; break; }
+		}
+		if (onlyOther) return;
 		out.errors.push(tmLsvIssue(
 			TM_LSV_CODE.NO_SET_NAMES,
 			"No set names found on the '" + TM_LS.SET_NAMES + "' layer.",
@@ -389,6 +399,11 @@ function tmLsvCheckSetNamePositioning(doc, out) {
 			if (tmLsvOverlapsArtboard(cells[i].geometricBounds, abBounds)) abCells.push(cells[i]);
 		}
 		if (!abCells.length) continue;
+
+		/* The "LOGOS:Other" artboard is the designed exception: it carries NO set names — the parser
+		   exports its logos into the "OTHER" set automatically — so it is exempt from set-name
+		   matching entirely. No issue is reported for it (per Charu: nothing should show). */
+		if (String(artboard.name).toLowerCase() === "logos:other") continue;
 
 		var rows = tmLsvGroupRows(abCells);
 		for (var r = 0; r < rows.length; r++) {
